@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, Platform, TextInput, Modal } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, Platform, TextInput, Modal, Alert } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import tw from 'twrnc';
@@ -17,12 +17,10 @@ export default function EmployeeHome() {
   const [date, setDate] = useState('Today, 8:30 AM');
   const [passengers, setPassengers] = useState('1');
 
-  // Location Search Modal State
   const [isLocationModalVisible, setLocationModalVisible] = useState(false);
   const [locationFieldType, setLocationFieldType] = useState<'source' | 'destination'>('source');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Animation values for the car hero
   const pulseScale = useSharedValue(1);
   const pulseOpacity = useSharedValue(0.5);
   const carTranslateY = useSharedValue(0);
@@ -52,12 +50,26 @@ export default function EmployeeHome() {
     setLocationModalVisible(false);
   };
 
+  const showComingSoon = (feature: string) => {
+    Alert.alert('Coming Soon', `${feature} is currently under development.`);
+  };
+
+  const handleSOS = () => {
+    Alert.alert(
+      'Emergency SOS',
+      'Are you sure you want to trigger an SOS alert? This will notify company security and admins immediately.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Trigger SOS', style: 'destructive', onPress: () => Alert.alert('SOS Triggered', 'Security has been notified and live tracking is shared.') }
+      ]
+    );
+  };
+
   const filteredLocations = LOCATIONS.filter(l => l.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
     <SafeAreaView style={tw`flex-1 bg-[#F8FAFC] pt-${Platform.OS === 'android' ? '8' : '0'}`}>
       <ScrollView contentContainerStyle={tw`flex-grow pb-8`}>
-        {/* Header */}
         <View style={tw`bg-white px-6 pt-4 pb-4 flex-row justify-between items-center shadow-sm z-10`}>
           <View style={tw`flex-row items-center`}>
             <View style={tw`mr-3`}>
@@ -69,7 +81,7 @@ export default function EmployeeHome() {
             </View>
           </View>
           <View style={tw`flex-row items-center`}>
-            <TouchableOpacity style={tw`mr-4 relative`}>
+            <TouchableOpacity style={tw`mr-4 relative`} onPress={() => showComingSoon('Notifications')}>
               <Ionicons name="notifications-outline" size={24} color="#0F172A" />
               <View style={tw`absolute -top-1 -right-1 bg-red-500 w-3 h-3 rounded-full border-2 border-white`} />
             </TouchableOpacity>
@@ -79,7 +91,6 @@ export default function EmployeeHome() {
           </View>
         </View>
 
-        {/* Animated Hero Section */}
         <View style={tw`bg-[#22C55E] px-6 py-10 rounded-b-3xl items-center relative overflow-hidden shadow-sm`}>
           <View style={tw`absolute inset-0 opacity-10 bg-black`} />
           <View style={tw`h-32 justify-center items-center relative w-full mb-2`}>
@@ -89,11 +100,10 @@ export default function EmployeeHome() {
               <Ionicons name="car-sport" size={36} color="#22C55E" />
             </Animated.View>
           </View>
-          <Text style={tw`text-white text-2xl font-extrabold mb-1 text-center`}>Your commute network is live</Text>
-          <Text style={tw`text-green-50 text-sm text-center font-medium`}>Find verified poolers and rides near you</Text>
+          <Text style={tw`text-white text-2xl font-extrabold mb-1 text-center`}>Find trusted rides to work.</Text>
+          <Text style={tw`text-green-50 text-sm text-center font-medium`}>See who's going your way before you book.</Text>
         </View>
 
-        {/* Route Search Form (Floating) */}
         <View style={tw`px-4 -mt-6`}>
           <View style={tw`bg-white rounded-2xl p-5 shadow-md border border-gray-100`}>
             <View style={tw`flex-row items-center mb-4`}>
@@ -130,7 +140,6 @@ export default function EmployeeHome() {
           </View>
         </View>
 
-        {/* Quick Actions */}
         <View style={tw`px-6 mt-8`}>
           <Text style={tw`text-[#0F172A] font-extrabold text-lg mb-4`}>Explore</Text>
           <View style={tw`flex-row justify-between flex-wrap gap-y-4`}>
@@ -142,14 +151,13 @@ export default function EmployeeHome() {
               <View style={tw`bg-green-50 w-12 h-12 rounded-full items-center justify-center mb-3`}><Ionicons name="map" size={24} color="#22C55E" /></View>
               <Text style={tw`text-sm text-[#0F172A] font-bold`}>Live Map</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={tw`bg-white w-[31%] rounded-xl p-4 items-center shadow-sm border border-red-50`} onPress={() => alert('SOS Help initiated')}>
+            <TouchableOpacity style={tw`bg-white w-[31%] rounded-xl p-4 items-center shadow-sm border border-red-50`} onPress={handleSOS}>
               <View style={tw`bg-red-50 w-12 h-12 rounded-full items-center justify-center mb-3`}><Ionicons name="shield-half" size={24} color="#dc2626" /></View>
               <Text style={tw`text-sm text-red-700 font-bold`}>SOS</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* Usual Route */}
         <View style={tw`px-6 mt-8`}>
           <Text style={tw`text-[#0F172A] font-extrabold text-lg mb-3`}>Your usual route</Text>
           <View style={tw`bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex-row items-center justify-between`}>
@@ -165,7 +173,6 @@ export default function EmployeeHome() {
 
       </ScrollView>
 
-      {/* Location Search Modal */}
       <Modal visible={isLocationModalVisible} animationType="slide" presentationStyle="pageSheet">
         <SafeAreaView style={tw`flex-1 bg-white pt-${Platform.OS === 'android' ? '8' : '0'}`}>
           <View style={tw`px-4 py-4 flex-row items-center border-b border-gray-100`}>

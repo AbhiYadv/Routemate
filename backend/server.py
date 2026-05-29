@@ -201,6 +201,19 @@ async def log_call(data: CallCreate, current_user: UserInDB = Depends(get_curren
     return {"status": "success"}
 
 
+@api_router.get("/poolers/nearby")
+async def get_nearby_poolers(lat: float = 0.0, lng: float = 0.0, current_user: UserInDB = Depends(get_current_user)):
+    poolers = await db.pooler_profiles.find({
+        "company_id": current_user.company_id
+    }).to_list(100)
+    for p in poolers:
+        p.pop("_id", None)
+        u = await db.users.find_one({"id": p["user_id"]})
+        if u:
+            p["name"] = u.get("name")
+    return poolers
+
+
 @api_router.get("/poolers/{user_id}")
 async def get_pooler(user_id: str, current_user: UserInDB = Depends(get_current_user)):
     pooler = await db.pooler_profiles.find_one({"user_id": user_id})
