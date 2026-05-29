@@ -1,2 +1,60 @@
-import { View, Text } from 'react-native';
-export default function Profile() { return <View><Text>Profile</Text></View>; }
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { useRouter } from 'expo-router';
+import tw from 'twrnc';
+import { Ionicons } from '@expo/vector-icons';
+import { useAuthStore } from '../../src/store/auth';
+
+export default function Profile() {
+  const router = useRouter();
+  const { user, logout } = useAuthStore();
+
+  return (
+    <SafeAreaView style={tw`flex-1 bg-gray-50 pt-${Platform.OS === 'android' ? '8' : '0'}`}>
+      <View style={tw`bg-white px-4 py-4 flex-row items-center shadow-sm z-10`}>
+        <TouchableOpacity onPress={() => router.back()} style={tw`mr-4 p-2`}>
+          <Ionicons name="arrow-back" size={24} color="#374151" />
+        </TouchableOpacity>
+        <Text style={tw`text-gray-900 font-bold text-lg`}>My Profile</Text>
+      </View>
+
+      <ScrollView contentContainerStyle={tw`p-6`}>
+        <View style={tw`items-center mb-8`}>
+          <View style={tw`w-24 h-24 bg-green-100 rounded-full items-center justify-center mb-4`}>
+            <Ionicons name="person" size={48} color="#16a34a" />
+          </View>
+          <Text style={tw`text-2xl font-bold text-gray-900`}>{user?.name}</Text>
+          <Text style={tw`text-gray-500`}>{user?.email}</Text>
+          <View style={tw`bg-blue-50 px-3 py-1 rounded-full mt-2 flex-row items-center`}>
+            <Ionicons name="checkmark-circle" size={14} color="#0284c7" style={tw`mr-1`} />
+            <Text style={tw`text-blue-700 text-xs font-semibold`}>Verified Employee</Text>
+          </View>
+        </View>
+
+        <View style={tw`bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-6`}>
+          <Text style={tw`font-bold text-gray-900 mb-4`}>Account Settings</Text>
+          
+          <TouchableOpacity style={tw`flex-row justify-between items-center py-3 border-b border-gray-100`}>
+            <Text style={tw`text-gray-700`}>Commute Preferences</Text>
+            <Ionicons name="chevron-forward" size={20} color="#9ca3af" />
+          </TouchableOpacity>
+          <TouchableOpacity style={tw`flex-row justify-between items-center py-3 border-b border-gray-100`}>
+            <Text style={tw`text-gray-700`}>Emergency Contacts</Text>
+            <Ionicons name="chevron-forward" size={20} color="#9ca3af" />
+          </TouchableOpacity>
+          <TouchableOpacity style={tw`flex-row justify-between items-center py-3`}>
+            <Text style={tw`text-gray-700`}>Support & Help</Text>
+            <Ionicons name="chevron-forward" size={20} color="#9ca3af" />
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity 
+          style={tw`w-full bg-red-50 py-4 rounded-xl flex-row justify-center items-center border border-red-100`}
+          onPress={logout}
+        >
+          <Ionicons name="log-out-outline" size={20} color="#dc2626" style={tw`mr-2`} />
+          <Text style={tw`text-red-600 font-bold text-lg`}>Logout</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}

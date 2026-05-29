@@ -5,7 +5,7 @@ import tw from 'twrnc';
 export default function EmployeeLayout() {
   return (
     <Tabs screenOptions={{
-      tabBarActiveTintColor: '#0284c7',
+      tabBarActiveTintColor: '#16a34a', // green theme
       tabBarInactiveTintColor: '#9ca3af',
       tabBarStyle: tw`bg-white border-t border-gray-100 h-16 pb-2 pt-2`,
       headerShown: false,
@@ -25,9 +25,16 @@ export default function EmployeeLayout() {
         }} 
       />
       <Tabs.Screen 
+        name="map" 
+        options={{
+          title: 'Live Map',
+          tabBarIcon: ({ color }) => <Ionicons name="map" size={24} color={color} />
+        }} 
+      />
+      <Tabs.Screen 
         name="bookings" 
         options={{
-          title: 'My Rides',
+          title: 'Rides',
           tabBarIcon: ({ color }) => <Ionicons name="list" size={24} color={color} />
         }} 
       />

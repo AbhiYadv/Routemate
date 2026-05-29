@@ -60,6 +60,10 @@ class UserBase(BaseModel):
     safety_preference: Optional[str] = None
     emergency_contact_name: Optional[str] = None
     emergency_contact_phone: Optional[str] = None
+    current_latitude: Optional[float] = None
+    current_longitude: Optional[float] = None
+    location_permission_status: Optional[str] = None
+    last_location_updated_at: Optional[datetime] = None
 
 class UserCreate(UserBase):
     password: str
@@ -94,7 +98,7 @@ class Corridor(BaseModel):
 class StopDetail(BaseModel):
     area: str
     time: str
-    type: str # "PICKUP" or "DROP"
+    type: str
 
 class Ride(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -110,6 +114,7 @@ class Ride(BaseModel):
     estimated_arrival_time: datetime
     available_seats: int
     total_seats: int
+    current_passenger_count: int = 0
     status: RideStatusEnum = RideStatusEnum.SCHEDULED
     pickup_points: List[str] = []
     notes: Optional[str] = None
@@ -119,6 +124,15 @@ class Ride(BaseModel):
     shared_eta_minutes: Optional[int] = None
     detour_minutes: Optional[int] = None
     route_match_score: Optional[int] = None
+    origin_latitude: Optional[float] = None
+    origin_longitude: Optional[float] = None
+    destination_latitude: Optional[float] = None
+    destination_longitude: Optional[float] = None
+    route_polyline: Optional[str] = None
+    route_coordinates: Optional[List[Dict[str, float]]] = None
+    driver_current_latitude: Optional[float] = None
+    driver_current_longitude: Optional[float] = None
+    last_driver_location_updated_at: Optional[datetime] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -136,8 +150,35 @@ class Booking(BaseModel):
     drop_sequence_order: Optional[int] = None
     estimated_pickup_time: Optional[datetime] = None
     estimated_drop_time: Optional[datetime] = None
+    pickup_latitude: Optional[float] = None
+    pickup_longitude: Optional[float] = None
+    drop_latitude: Optional[float] = None
+    drop_longitude: Optional[float] = None
     booked_at: datetime = Field(default_factory=datetime.utcnow)
     cancelled_at: Optional[datetime] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class PoolerProfile(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    company_id: str
+    user_id: str
+    usual_origin_area: Optional[str] = None
+    usual_destination_area: Optional[str] = None
+    usual_departure_time: Optional[str] = None
+    usual_arrival_time: Optional[str] = None
+    vehicle_type: Optional[str] = None
+    vehicle_number_masked: Optional[str] = None
+    rating: float = 5.0
+    completed_rides_count: int = 0
+    trust_score: str = "High"
+    verified_status: bool = True
+    frequent_pickup_areas: List[str] = []
+    frequent_drop_areas: List[str] = []
+    current_latitude: Optional[float] = None
+    current_longitude: Optional[float] = None
+    last_location_updated_at: Optional[datetime] = None
+    is_live_available: bool = False
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -146,9 +187,12 @@ class HelplineTicket(BaseModel):
     company_id: str
     user_id: str
     ride_id: Optional[str] = None
-    message: str
+    type: str = "HELP" # HELP or SOS
     status: EventStatusEnum = EventStatusEnum.OPEN
+    priority: str = "LOW"
+    message: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
+    resolved_at: Optional[datetime] = None
 
 class SafetyEvent(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
