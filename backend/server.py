@@ -157,6 +157,50 @@ async def book_ride(ride_id: str, current_user: UserInDB = Depends(get_current_u
     
     return {"message": "Booking successful", "booking_id": booking.id}
 
+@api_router.get("/messages/{ride_id}/{receiver_id}")
+async def get_messages(ride_id: str, receiver_id: str, current_user: UserInDB = Depends(get_current_user)):
+    messages = await db.ride_messages.find({
+        "ride_id": ride_id,
+        "$or": [
+            {"sender_id": current_user.id, "receiver_id": receiver_id},
+            {"sender_id": receiver_id, "receiver_id": current_user.id}
+        ]
+    }).sort("created_at", 1).to_list(100)
+    for m in messages:
+        m.pop("_id", None)
+    return messages
+
+class MessageCreate(BaseModel):
+    message: str
+
+@api_router.post("/messages/{ride_id}/{receiver_id}")
+async def send_message(ride_id: str, receiver_id: str, data: MessageCreate, current_user: UserInDB = Depends(get_current_user)):
+    msg = RideMessage(
+        company_id=current_user.company_id,
+        ride_id=ride_id,
+        sender_id=current_user.id,
+        receiver_id=receiver_id,
+        message=data.message
+    )
+    await db.ride_messages.insert_one(msg.dict())
+    return {"status": "success", "message_id": msg.id}
+
+class CallCreate(BaseModel):
+    ride_id: str
+    receiver_id: str
+
+@api_router.post("/calls")
+async def log_call(data: CallCreate, current_user: UserInDB = Depends(get_current_user)):
+    call_log = CallLog(
+        company_id=current_user.company_id,
+        ride_id=data.ride_id,
+        caller_id=current_user.id,
+        receiver_id=data.receiver_id
+    )
+    await db.call_logs.insert_one(call_log.dict())
+    return {"status": "success"}
+
+
 @api_router.get("/poolers/{user_id}")
 async def get_pooler(user_id: str, current_user: UserInDB = Depends(get_current_user)):
     pooler = await db.pooler_profiles.find_one({"user_id": user_id})

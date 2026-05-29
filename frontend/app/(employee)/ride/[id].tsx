@@ -93,7 +93,7 @@ export default function RideDetails() {
               <TouchableOpacity onPress={() => setShowCallModal(true)} style={tw`bg-green-100 w-10 h-10 rounded-full items-center justify-center mr-2 border border-green-200`}>
                 <Ionicons name="call" size={18} color="#16a34a" />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => showComingSoon('In-App Messaging')} style={tw`bg-blue-100 w-10 h-10 rounded-full items-center justify-center border border-blue-200`}>
+              <TouchableOpacity onPress={() => router.push(`/(employee)/chat?ride_id=${ride.id}&receiver_id=${ride.driver_user_id}&receiver_name=${ride.driver?.name}`)} style={tw`bg-blue-100 w-10 h-10 rounded-full items-center justify-center border border-blue-200`}>
                 <Ionicons name="chatbubble" size={18} color="#2563EB" />
               </TouchableOpacity>
             </View>
@@ -178,7 +178,7 @@ export default function RideDetails() {
 
         {/* AI Assist */}
         <View style={tw`px-6 mt-6`}>
-          <TouchableOpacity onPress={() => showComingSoon('AI Ride Assistant')} style={tw`bg-purple-50 rounded-2xl p-4 flex-row items-center border border-purple-100 shadow-sm`}>
+          <TouchableOpacity onPress={() => router.push(`/(employee)/ai?ride_id=${ride.id}`)} style={tw`bg-purple-50 rounded-2xl p-4 flex-row items-center border border-purple-100 shadow-sm`}>
             <View style={tw`bg-purple-200 w-12 h-12 rounded-full items-center justify-center mr-4`}>
               <Ionicons name="sparkles" size={24} color="#9333ea" />
             </View>
