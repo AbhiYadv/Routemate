@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { api } from '../utils/api';
-import { setItem, removeItem, getItem } from '../utils/storage';
+import { storage } from '../utils/storage';
 
 interface User {
   id: string;
@@ -30,7 +30,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ isLoading: true });
     try {
       const { data } = await api.post('/auth/login', { email, password });
-      await setItem('access_token', data.access_token);
+      await storage.setItem('access_token', data.access_token);
       set({ user: data.user, token: data.access_token, isLoading: false });
     } catch (error) {
       set({ isLoading: false });
@@ -39,14 +39,14 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logout: async () => {
-    await removeItem('access_token');
+    await storage.removeItem('access_token');
     set({ user: null, token: null });
   },
 
   checkAuth: async () => {
     set({ isLoading: true });
     try {
-      const token = await getItem('access_token');
+      const token = await storage.getItem('access_token', null);
       if (!token) {
         set({ user: null, token: null, isLoading: false });
         return;
@@ -54,7 +54,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       const { data } = await api.get('/auth/me');
       set({ user: data, token, isLoading: false });
     } catch (error) {
-      await removeItem('access_token');
+      await storage.removeItem('access_token');
       set({ user: null, token: null, isLoading: false });
     }
   },
