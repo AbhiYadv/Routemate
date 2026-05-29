@@ -1,10 +1,11 @@
-import { View, Text, TouchableOpacity, ScrollView, Platform, SafeAreaView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Platform, SafeAreaView, Alert, ActivityIndicator } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import tw from 'twrnc';
 import { Ionicons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
 import { api } from '../../src/utils/api';
 import MapComponent from '../../src/components/MapComponent';
+import { LOCATIONS } from '../../src/utils/locations';
 
 export default function SearchResults() {
   const router = useRouter();
@@ -14,22 +15,18 @@ export default function SearchResults() {
   const [loading, setLoading] = useState(true);
   const [bookingRideId, setBookingRideId] = useState<string | null>(null);
 
+  const sourceLoc = LOCATIONS.find(l => l.name === params.source);
+  const destLoc = LOCATIONS.find(l => l.name === params.destination);
+
   const fetchData = async () => {
     try {
       const { data } = await api.get('/rides/search', {
-        params: {
-          source: params.source,
-          destination: params.destination,
-          passengers: params.passengers || 1
-        }
+        params: { source: params.source, destination: params.destination, passengers: params.passengers || 1 }
       });
       setRides(data || []);
 
       if (!data || data.length === 0) {
-        // Fetch suggested poolers fallback
-        const poolersRes = await api.get('/poolers/nearby', {
-            params: { lat: 0, lng: 0 } // handled on backend for MVP
-        });
+        const poolersRes = await api.get('/poolers/nearby', { params: { lat: 0, lng: 0 } });
         setPoolers(poolersRes.data || []);
       }
     } catch (err) {
@@ -49,7 +46,7 @@ export default function SearchResults() {
       await api.post(`/rides/${rideId}/book`);
       Alert.alert('Success', 'Ride booked successfully!', [
         { text: 'View My Rides', onPress: () => router.push('/(employee)/bookings') },
-        { text: 'OK', onPress: () => fetchData() } // refresh to decrement seats
+        { text: 'OK', onPress: () => fetchData() }
       ]);
     } catch (e: any) {
       Alert.alert('Error', e.response?.data?.detail || 'Booking failed');
@@ -57,11 +54,27 @@ export default function SearchResults() {
     setBookingRideId(null);
   };
 
+  // Prepare map data
+  let markers: any[] = [];
+  if (sourceLoc) markers.push({ id: 'source', latitude: sourceLoc.lat, longitude: sourceLoc.lng, type: 'pickup', title: 'Pickup', subtitle: sourceLoc.name });
+  if (destLoc) markers.push({ id: 'dest', latitude: destLoc.lat, longitude: destLoc.lng, type: 'drop', title: 'Drop', subtitle: destLoc.name });
+  
+  rides.forEach(r => {
+    if (r.origin_latitude && r.origin_longitude) {
+      markers.push({ id: `ride_${r.id}`, latitude: r.origin_latitude, longitude: r.origin_longitude, type: 'ride', title: r.driver_name, subtitle: `${r.available_seats} seats` });
+    }
+  });
+
+  const polyline = (sourceLoc && destLoc) ? [
+    { latitude: sourceLoc.lat, longitude: sourceLoc.lng },
+    { latitude: destLoc.lat, longitude: destLoc.lng }
+  ] : [];
+
   return (
     <SafeAreaView style={tw`flex-1 bg-[#F8FAFC] pt-${Platform.OS === 'android' ? '8' : '0'}`}>
-      {/* Map Background Placeholder */}
-      <View style={tw`absolute inset-0 bg-gray-200 items-center justify-center`}>
-         <MapComponent />
+      {/* Map Preview at top */}
+      <View style={tw`absolute inset-0 bg-gray-200`}>
+         <MapComponent markers={markers} polyline={polyline} />
       </View>
 
       <View style={tw`absolute top-10 w-full px-4 flex-row items-center z-10`}>
@@ -82,7 +95,7 @@ export default function SearchResults() {
         
         <ScrollView contentContainerStyle={tw`px-4 pb-8`}>
           {loading ? (
-            <Text style={tw`text-center text-gray-500 mt-10 font-bold`}>Finding routes...</Text>
+            <View style={tw`items-center mt-10`}><ActivityIndicator size="large" color="#2563EB" /></View>
           ) : rides.length === 0 ? (
             <View>
               <Text style={tw`text-center text-gray-500 mt-6 mb-6 font-bold text-lg px-4`}>No exact rides found. Try nearby poolers or adjust your time.</Text>
@@ -118,18 +131,11 @@ export default function SearchResults() {
                 const stopsBeforeDrop = Math.max(0, (ride.stop_sequence?.length || 2) - 2);
 
                 return (
-                <View 
-                  key={idx} 
-                  style={tw`bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-4`}
-                >
+                <View key={idx} style={tw`bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-4`}>
                   <View style={tw`flex-row justify-between mb-3`}>
                     <View style={tw`flex-row items-center flex-1`}>
                       <View style={tw`w-12 h-12 bg-gray-100 rounded-full items-center justify-center mr-3 overflow-hidden border border-gray-200`}>
-                        {ride.driver_avatar ? (
-                          <View style={tw`w-full h-full bg-gray-200`} />
-                        ) : (
-                          <Ionicons name="person" size={24} color="#64748b" />
-                        )}
+                        {ride.driver_avatar ? <View style={tw`w-full h-full bg-gray-200`} /> : <Ionicons name="person" size={24} color="#64748b" />}
                       </View>
                       <View style={tw`flex-1 mr-2`}>
                         <Text style={tw`text-lg font-bold text-[#0F172A]`} numberOfLines={1}>{ride.driver_name || 'Pooler'}</Text>
