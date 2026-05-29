@@ -134,21 +134,31 @@ export default function EmployeeHome() {
         <View style={tw`px-6 mt-8`}>
           <Text style={tw`text-[#0F172A] font-extrabold text-lg mb-4`}>Explore</Text>
           <View style={tw`flex-row justify-between flex-wrap gap-y-4`}>
-            <TouchableOpacity style={tw`bg-white w-[48%] rounded-xl p-4 items-center shadow-sm border border-gray-100`} onPress={handleSearch}>
-              <View style={tw`bg-blue-50 w-12 h-12 rounded-full items-center justify-center mb-3`}><Ionicons name="search" size={24} color="#2563EB" /></View>
-              <Text style={tw`text-sm text-[#0F172A] font-bold`}>Find Ride</Text>
+            <TouchableOpacity style={tw`bg-white w-[31%] rounded-xl p-4 items-center shadow-sm border border-gray-100`} onPress={() => router.push('/(employee)/create')}>
+              <View style={tw`bg-orange-50 w-12 h-12 rounded-full items-center justify-center mb-3`}><Ionicons name="add" size={24} color="#ea580c" /></View>
+              <Text style={tw`text-sm text-[#0F172A] font-bold`}>Publish</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={tw`bg-white w-[48%] rounded-xl p-4 items-center shadow-sm border border-gray-100`} onPress={() => router.push('/(employee)/map')}>
+            <TouchableOpacity style={tw`bg-white w-[31%] rounded-xl p-4 items-center shadow-sm border border-gray-100`} onPress={() => router.push('/(employee)/map')}>
               <View style={tw`bg-green-50 w-12 h-12 rounded-full items-center justify-center mb-3`}><Ionicons name="map" size={24} color="#22C55E" /></View>
               <Text style={tw`text-sm text-[#0F172A] font-bold`}>Live Map</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={tw`bg-white w-[48%] rounded-xl p-4 items-center shadow-sm border border-gray-100`} onPress={() => alert('Coming soon')}>
-              <View style={tw`bg-purple-50 w-12 h-12 rounded-full items-center justify-center mb-3`}><Ionicons name="sparkles" size={24} color="#9333ea" /></View>
-              <Text style={tw`text-sm text-[#0F172A] font-bold`}>AI Assistant</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={tw`bg-white w-[48%] rounded-xl p-4 items-center shadow-sm border border-red-50`} onPress={() => alert('Coming soon')}>
+            <TouchableOpacity style={tw`bg-white w-[31%] rounded-xl p-4 items-center shadow-sm border border-red-50`} onPress={() => alert('SOS Help initiated')}>
               <View style={tw`bg-red-50 w-12 h-12 rounded-full items-center justify-center mb-3`}><Ionicons name="shield-half" size={24} color="#dc2626" /></View>
-              <Text style={tw`text-sm text-red-700 font-bold`}>SOS / Help</Text>
+              <Text style={tw`text-sm text-red-700 font-bold`}>SOS</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Usual Route */}
+        <View style={tw`px-6 mt-8`}>
+          <Text style={tw`text-[#0F172A] font-extrabold text-lg mb-3`}>Your usual route</Text>
+          <View style={tw`bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex-row items-center justify-between`}>
+            <View>
+              <Text style={tw`text-[#0F172A] font-bold`}>BTM Layout → Whitefield</Text>
+              <Text style={tw`text-gray-500 text-sm mt-1 font-medium`}>Usually around 8:30 AM</Text>
+            </View>
+            <TouchableOpacity onPress={handleSearch} style={tw`bg-[#F8FAFC] px-4 py-2 rounded-lg border border-gray-100`}>
+              <Text style={tw`text-[#2563EB] font-bold`}>Search</Text>
             </TouchableOpacity>
           </View>
         </View>
