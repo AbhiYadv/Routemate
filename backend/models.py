@@ -39,12 +39,23 @@ class EventStatusEnum(str, Enum):
     IN_PROGRESS = "IN_PROGRESS"
     RESOLVED = "RESOLVED"
 
+class VisibilityModeEnum(str, Enum):
+    COMPANY_CIRCLE = "COMPANY_CIRCLE"
+    PARTNER_NETWORK = "PARTNER_NETWORK"
+    VERIFIED_COMMUNITY = "VERIFIED_COMMUNITY"
+
 # Models
 class Company(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     allowed_email_domains: List[str] = []
     status: str = "ACTIVE"
+    opt_in_status: str = "ACTIVE" # ACTIVE, INACTIVE, TRIAL
+    benefits_enabled: bool = False
+    fuel_voucher_enabled: bool = False
+    rewards_enabled: bool = False
+    partner_network_enabled: bool = False
+    verified_community_enabled: bool = False
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class UserBase(BaseModel):
@@ -99,17 +110,21 @@ class StopDetail(BaseModel):
     area: str
     time: str
     type: str
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
 class Ride(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     company_id: str
+    visibility_mode: VisibilityModeEnum = VisibilityModeEnum.COMPANY_CIRCLE
     corridor_id: Optional[str] = None
     vehicle_id: Optional[str] = None
     driver_user_id: Optional[str] = None
     vendor_id: Optional[str] = None
     ride_type: RideTypeEnum
     origin_area: str
-    destination_office_id: str
+    destination_area: str
+    destination_office_id: Optional[str] = None
     departure_time: datetime
     estimated_arrival_time: datetime
     available_seats: int
@@ -163,6 +178,7 @@ class PoolerProfile(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     company_id: str
     user_id: str
+    profile_photo_url: Optional[str] = None
     usual_origin_area: Optional[str] = None
     usual_destination_area: Optional[str] = None
     usual_departure_time: Optional[str] = None
@@ -170,6 +186,7 @@ class PoolerProfile(BaseModel):
     vehicle_type: Optional[str] = None
     vehicle_number_masked: Optional[str] = None
     rating: float = 5.0
+    review_count: int = 0
     completed_rides_count: int = 0
     trust_score: str = "High"
     verified_status: bool = True
@@ -182,12 +199,59 @@ class PoolerProfile(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
+class RideRating(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    company_id: str
+    ride_id: str
+    reviewer_user_id: str
+    reviewed_user_id: str
+    punctuality_rating: int = 5
+    safety_rating: int = 5
+    route_accuracy_rating: int = 5
+    communication_rating: int = 5
+    overall_rating: int = 5
+    feedback: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class RideReward(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    company_id: str
+    ride_id: str
+    driver_user_id: str
+    completed_bookings_count: int = 0
+    average_rating: float = 5.0
+    voucher_status: str = "ELIGIBLE" # NOT_ELIGIBLE, ELIGIBLE, ISSUED
+    estimated_fuel_voucher_amount: int = 0
+    reward_points: int = 0
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class RideMessage(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    company_id: str
+    ride_id: str
+    sender_id: str
+    receiver_id: str
+    message: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    read_at: Optional[datetime] = None
+
+class CallLog(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    company_id: str
+    ride_id: str
+    caller_id: str
+    receiver_id: str
+    status: str = "COMPLETED"
+    started_at: datetime = Field(default_factory=datetime.utcnow)
+    ended_at: Optional[datetime] = None
+
 class HelplineTicket(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     company_id: str
     user_id: str
     ride_id: Optional[str] = None
-    type: str = "HELP" # HELP or SOS
+    type: str = "HELP"
     status: EventStatusEnum = EventStatusEnum.OPEN
     priority: str = "LOW"
     message: str
