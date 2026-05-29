@@ -14,7 +14,7 @@ from passlib.context import CryptContext
 
 from models import (
     Company, UserInDB, UserCreate, RoleEnum, Ride, Booking, PoolerProfile,
-    HelplineTicket, SafetyEvent, OfficeLocation, Corridor, RideStatusEnum, VisibilityModeEnum
+    HelplineTicket, SafetyEvent, OfficeLocation, Corridor, RideStatusEnum, VisibilityModeEnum, BookingStatusEnum
 )
 
 ROOT_DIR = Path(__file__).parent
@@ -88,16 +88,18 @@ async def search_rides(
         "status": {"$in": [RideStatusEnum.SCHEDULED.value, RideStatusEnum.ACTIVE.value]},
         "available_seats": {"$gte": passengers}
     }
-    if source:
+    if source and source.strip() != "":
         query["$or"] = [
             {"origin_area": {"$regex": source, "$options": "i"}},
             {"stop_sequence.area": {"$regex": source, "$options": "i"}}
         ]
-    if destination:
-        pass
 
     rides = await db.rides.find(query).to_list(100)
     
+    # Fetch company name once to optimize
+    company = await db.companies.find_one({"id": current_user.company_id})
+    company_name = company.get("name") if company else "Verified Company"
+
     for r in rides:
         r.pop("_id", None)
         driver = await db.users.find_one({"id": r["driver_user_id"]})
@@ -110,6 +112,7 @@ async def search_rides(
             r["driver_vehicle"] = pooler.get("vehicle_type")
             r["driver_avatar"] = pooler.get("profile_photo_url")
         
+        r["company_name"] = company_name
         r["visibility_badge"] = "Company Circle" if r.get("visibility_mode") == VisibilityModeEnum.COMPANY_CIRCLE.value else "Verified Community"
         
     return rides
@@ -188,15 +191,48 @@ async def get_my_location(current_user: UserInDB = Depends(get_current_user)):
 async def get_map_config():
     return {"mapsEnabled": True, "provider": "google", "clientKeyAvailable": bool(os.environ.get("GOOGLE_MAPS_API_KEY"))}
 
+# --- Bookings & My Rides ---
 @api_router.get("/my-bookings")
 async def get_my_bookings(current_user: UserInDB = Depends(get_current_user)):
-    bookings = await db.bookings.find({"user_id": current_user.id}).to_list(100)
+    bookings = await db.bookings.find({"user_id": current_user.id}).sort("created_at", -1).to_list(100)
     for b in bookings:
         b.pop("_id", None)
         ride = await db.rides.find_one({"id": b["ride_id"]})
-        if ride: ride.pop("_id", None)
+        if ride:
+            ride.pop("_id", None)
+            driver = await db.users.find_one({"id": ride["driver_user_id"]})
+            if driver:
+                ride["driver_name"] = driver.get("name")
+            pooler = await db.pooler_profiles.find_one({"user_id": ride["driver_user_id"]})
+            if pooler:
+                ride["driver_avatar"] = pooler.get("profile_photo_url")
+            company = await db.companies.find_one({"id": ride.get("company_id")})
+            ride["company_name"] = company.get("name") if company else "Verified Company"
+            ride["visibility_badge"] = "Company Circle" if ride.get("visibility_mode") == VisibilityModeEnum.COMPANY_CIRCLE.value else "Verified Community"
         b["ride"] = ride
     return bookings
+
+@api_router.post("/bookings/{booking_id}/cancel")
+async def cancel_booking(booking_id: str, current_user: UserInDB = Depends(get_current_user)):
+    booking = await db.bookings.find_one({"id": booking_id, "user_id": current_user.id})
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    if booking["status"] == BookingStatusEnum.CANCELLED.value:
+        raise HTTPException(status_code=400, detail="Already cancelled")
+    
+    # Update Booking Status
+    await db.bookings.update_one(
+        {"id": booking_id},
+        {"$set": {"status": BookingStatusEnum.CANCELLED.value, "cancelled_at": datetime.utcnow()}}
+    )
+    
+    # Restore the seat in the Ride
+    await db.rides.update_one(
+        {"id": booking["ride_id"]},
+        {"$inc": {"available_seats": 1, "current_passenger_count": -1}}
+    )
+    
+    return {"status": "success"}
 
 app.include_router(api_router)
 app.add_middleware(CORSMiddleware, allow_credentials=True, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
