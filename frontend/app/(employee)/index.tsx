@@ -2,6 +2,7 @@ import {
   View, Text, SafeAreaView, TouchableOpacity, ScrollView,
   Platform, TextInput, Modal, Alert,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import tw from 'twrnc';
@@ -216,26 +217,32 @@ export default function EmployeeHome() {
           </View>
         </View>
 
-        {/* ── Premium Hero — deep navy → blue gradient ── */}
-        <View style={tw`bg-[#0F172A] px-6 py-10 items-center relative overflow-hidden`}>
-          {/* Subtle glow blob */}
-          <View style={tw`absolute -top-10 -right-10 w-48 h-48 bg-[#16a34a] opacity-20 rounded-full`} />
-          <View style={tw`absolute bottom-0 -left-8 w-32 h-32 bg-[#22c55e] opacity-10 rounded-full`} />
+        {/* ── Premium Hero — green → blue gradient ── */}
+        <LinearGradient
+          colors={['#166534', '#1d4ed8']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={tw`px-6 py-10 items-center relative overflow-hidden`}
+        >
+          {/* Glow blobs */}
+          <View style={tw`absolute -top-10 -right-10 w-48 h-48 bg-white opacity-5 rounded-full`} />
+          <View style={tw`absolute bottom-0 -left-8 w-32 h-32 bg-white opacity-5 rounded-full`} />
 
           <Animated.View style={[
-            tw`w-20 h-20 bg-[#14532d] rounded-full items-center justify-center mb-5 border border-[#16a34a] border-opacity-40`,
+            tw`w-20 h-20 rounded-full items-center justify-center mb-5`,
+            { backgroundColor: 'rgba(255,255,255,0.15)', borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.3)' },
             carStyle,
           ]}>
-            <Ionicons name="car-sport" size={38} color="#4ade80" />
+            <Ionicons name="car-sport" size={38} color="#ffffff" />
           </Animated.View>
 
           <Text style={tw`text-white text-2xl font-bold mb-1 text-center tracking-tight`}>
             Find trusted rides to work.
           </Text>
-          <Text style={tw`text-green-300 text-sm text-center font-medium`}>
+          <Text style={[tw`text-sm text-center font-medium`, { color: 'rgba(255,255,255,0.75)' }]}>
             See who's going your way before you book.
           </Text>
-        </View>
+        </LinearGradient>
 
         {/* ── Search Card ── */}
         <View style={tw`px-4 -mt-5`}>
