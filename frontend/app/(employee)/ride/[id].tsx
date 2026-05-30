@@ -98,7 +98,11 @@ export default function RideDetails() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView contentContainerStyle={tw`pb-10 bg-[#F8FAFC] rounded-t-3xl -mt-6 pt-4`}>
+      {/*
+        pb-36 (144pt) ensures content clears the sticky Book Seat bar (~100pt).
+        -mt-6 creates the overlapping rounded-sheet effect over the map.
+      */}
+      <ScrollView contentContainerStyle={tw`pb-36 bg-[#F8FAFC] rounded-t-3xl -mt-6 pt-4`}>
         
         {/* Pooler Summary */}
         <View style={tw`bg-white px-6 py-5 border-b border-gray-100 shadow-sm`}>

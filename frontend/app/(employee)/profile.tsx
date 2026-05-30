@@ -16,8 +16,10 @@ export default function Profile() {
         style: 'destructive',
         onPress: async () => {
           await logout();
-          // Replace to root — clears history so back cannot reopen authenticated screens
-          router.replace('/');
+          // Do NOT navigate here — calling router.replace('/') from inside the tab
+          // navigator resolves to the tab's own root, not the app root, leaving a
+          // frozen Home screen. The guard in app/_layout.tsx watches user state and
+          // navigates to the true app root when user becomes null.
         },
       },
     ]);
