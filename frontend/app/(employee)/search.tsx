@@ -7,6 +7,7 @@ import tw from 'twrnc';
 import { Ionicons } from '@expo/vector-icons';
 import { useState, useEffect, useRef } from 'react';
 import { api } from '../../src/utils/api';
+import { useNotificationStore } from '../../src/store/notifications';
 import MapComponent from '../../src/components/MapComponent';
 import { LOCATIONS } from '../../src/utils/locations';
 
@@ -187,6 +188,7 @@ export default function SearchResults() {
     passengers: string;
   }>();
 
+  const { push: pushNotif } = useNotificationStore();
   const [rides, setRides] = useState<any[]>([]);
   const [poolers, setPoolers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -228,6 +230,15 @@ export default function SearchResults() {
     setBookingRideId(rideId);
     try {
       await api.post(`/rides/${rideId}/book`);
+      const booked = rides.find((r) => r.id === rideId);
+      pushNotif({
+        type: 'booking',
+        title: 'Ride Booked!',
+        body: booked
+          ? `Seat confirmed with ${booked.driver_name} — ${booked.origin_area} → ${booked.destination_area}`
+          : 'Your ride is confirmed. Check My Rides for details.',
+        rideId,
+      });
       Alert.alert('Booked!', 'Ride booked successfully.', [
         { text: 'View My Rides', onPress: () => router.push('/(employee)/bookings') },
         { text: 'OK', onPress: fetchData },

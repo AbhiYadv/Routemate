@@ -1,62 +1,49 @@
-import { Slot, useRouter, useSegments } from 'expo-router';
-import { useEffect } from 'react';
+import { Redirect, Slot, useSegments } from 'expo-router';
+import { useEffect, useRef } from 'react';
 import { useAuthStore } from '../src/store/auth';
 import { View, ActivityIndicator } from 'react-native';
 import tw from 'twrnc';
 
+// Module-level flag: survives component remounts within a single page session.
+// Prevents checkAuth from firing on every expo-router layout re-mount during navigation.
+let _authInitialized = false;
+
 export default function RootLayout() {
   const { user, isLoading, checkAuth } = useAuthStore();
   const segments = useSegments();
-  const router = useRouter();
 
   useEffect(() => {
+    if (_authInitialized) return;
+    _authInitialized = true;
     checkAuth();
   }, []);
 
-  useEffect(() => {
-    if (isLoading) return;
+  const seg0 = segments[0] ?? '';
+  const inProtectedRoute = seg0 === '(employee)' || seg0 === '(admin)';
 
-    // Groups that require authentication
-    const inProtectedRoute =
-      segments[0] === '(employee)' || segments[0] === '(admin)';
-
-    if (__DEV__) {
-      console.log('[AuthGuard]', {
-        user: user ? `${user.email} (${user.role})` : 'null',
-        isLoading,
-        segment: segments[0],
-        inProtectedRoute,
-      });
-    }
-
-    if (!user) {
-      if (inProtectedRoute) {
-        // Navigate to /login (explicit public route, never resolves ambiguously).
-        // Using /login rather than / avoids any uncertainty about which component
-        // the root index resolves to in different Expo Router versions.
-        if (__DEV__) console.log('[AuthGuard] unauthenticated in protected route → /login');
-        router.replace('/login');
-      }
-    } else {
-      const inEmployeeGroup = segments[0] === '(employee)';
-      const inAdminGroup    = segments[0] === '(admin)';
-
-      if ((user.role === 'EMPLOYEE' || user.role === 'DRIVER') && !inEmployeeGroup) {
-        if (__DEV__) console.log('[AuthGuard] employee not in employee group → /(employee)');
-        router.replace('/(employee)');
-      } else if (user.role === 'COMPANY_ADMIN' && !inAdminGroup) {
-        if (__DEV__) console.log('[AuthGuard] admin not in admin group → /(admin)');
-        router.replace('/(admin)');
-      }
-    }
-  }, [user, isLoading, segments]);
-
-  if (isLoading) {
+  // Only block rendering with a spinner while auth is loading AND we're in a
+  // protected route — public routes (landing, login) show instantly.
+  if (isLoading && inProtectedRoute) {
     return (
       <View style={tw`flex-1 justify-center items-center bg-white`}>
         <ActivityIndicator size="large" color="#2563EB" />
       </View>
     );
+  }
+
+  // Unauthenticated in protected route → login
+  if (!isLoading && !user && inProtectedRoute) {
+    return <Redirect href="/login" />;
+  }
+
+  // Authenticated on a public page → correct group
+  if (!isLoading && user) {
+    if ((user.role === 'EMPLOYEE' || user.role === 'DRIVER') && seg0 !== '(employee)') {
+      return <Redirect href="/(employee)" />;
+    }
+    if (user.role === 'COMPANY_ADMIN' && seg0 !== '(admin)') {
+      return <Redirect href="/(admin)" />;
+    }
   }
 
   return <Slot />;

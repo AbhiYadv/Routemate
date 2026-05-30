@@ -1,5 +1,4 @@
 import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, Platform, Alert } from 'react-native';
-import { router } from 'expo-router';
 import { useRouter } from 'expo-router';
 import tw from 'twrnc';
 import { Ionicons } from '@expo/vector-icons';

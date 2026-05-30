@@ -1,21 +1,17 @@
-// Web storage (Metro picks index.ts on native).
-// Helpers never throw: reads return `fallback`, writes return `false`.
-// Values supported: string | number | boolean | null (JSON-serialized on disk).
-// Usage: import { storage } from "@/src/utils/storage"; await storage.getItem(key, fallback);
-// No Keychain on web — secure* helpers reuse AsyncStorage (no expo-secure-store).
-
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// Web storage — uses window.localStorage directly.
+// localStorage is synchronous and has no initialization race unlike AsyncStorage's
+// IndexedDB backend which can hang when the database is in a corrupt/empty state.
+// All helpers are async for interface compatibility but resolve immediately.
 
 import { AssertNoExtras, StorageBase, StorageItemValue } from "./storage-base";
 
 export class Storage extends StorageBase {
-  // General KV — backed by AsyncStorage (its built-in web shim uses IndexedDB).
   async getItem<Fallback extends StorageItemValue>(
     key: string,
     fallback: Fallback,
   ): Promise<Fallback | null> {
     try {
-      const raw = await AsyncStorage.getItem(key);
+      const raw = window.localStorage.getItem(key);
       return this.retrieve(raw, fallback);
     } catch (e) {
       this.warn("getItem", key, e);
@@ -28,7 +24,7 @@ export class Storage extends StorageBase {
     value: Value,
   ): Promise<boolean> {
     try {
-      await AsyncStorage.setItem(key, JSON.stringify(value));
+      window.localStorage.setItem(key, JSON.stringify(value));
       return true;
     } catch (e) {
       this.warn("setItem", key, e);
@@ -38,7 +34,7 @@ export class Storage extends StorageBase {
 
   async removeItem(key: string): Promise<boolean> {
     try {
-      await AsyncStorage.removeItem(key);
+      window.localStorage.removeItem(key);
       return true;
     } catch (e) {
       this.warn("removeItem", key, e);
@@ -46,7 +42,7 @@ export class Storage extends StorageBase {
     }
   }
 
-  // Browsers have no Keychain — secure* helpers fall through to AsyncStorage.
+  // Browsers have no secure enclave — secure* helpers use localStorage.
   async secureGet<Fallback extends StorageItemValue>(
     key: string,
     fallback: Fallback,
