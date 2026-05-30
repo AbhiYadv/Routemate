@@ -30,7 +30,7 @@ function NotificationPanel({
   };
   const colorMap: Record<string, string> = {
     booking: '#22C55E',
-    ride_update: '#16a34a',
+    ride_update: '#1d4ed8',
     sos: '#dc2626',
     system: '#6366f1',
   };
@@ -43,7 +43,7 @@ function NotificationPanel({
           <View style={tw`flex-row items-center gap-4`}>
             {notifications.length > 0 && (
               <TouchableOpacity onPress={markAllRead}>
-                <Text style={tw`text-[#16a34a] text-sm font-semibold`}>Mark all read</Text>
+                <Text style={tw`text-[#1d4ed8] text-sm font-semibold`}>Mark all read</Text>
               </TouchableOpacity>
             )}
             <TouchableOpacity
@@ -84,7 +84,7 @@ function NotificationPanel({
                 <View style={tw`flex-1`}>
                   <View style={tw`flex-row items-center justify-between mb-0.5`}>
                     <Text style={tw`text-[#0F172A] font-bold text-sm`}>{n.title}</Text>
-                    {!n.read && <View style={tw`w-2 h-2 rounded-full bg-[#16a34a]`} />}
+                    {!n.read && <View style={tw`w-2 h-2 rounded-full bg-[#1d4ed8]`} />}
                   </View>
                   <Text style={tw`text-gray-500 text-xs leading-relaxed`}>{n.body}</Text>
                   <Text style={tw`text-gray-400 text-[10px] mt-1.5`}>
@@ -211,15 +211,15 @@ export default function EmployeeHome() {
               style={tw`w-11 h-11 bg-green-50 rounded-full items-center justify-center border border-green-100`}
               accessibilityRole="button" accessibilityLabel="Profile"
             >
-              <Ionicons name="person" size={20} color="#16a34a" />
+              <Ionicons name="person" size={20} color="#1d4ed8" />
             </TouchableOpacity>
           </View>
         </View>
 
         {/* ── Hero — solid blue ── */}
-        <View style={tw`bg-[#1d4ed8] px-6 py-10 items-center`}>
+        <View style={tw`bg-[#16a34a] px-6 py-10 items-center`}>
           <Animated.View style={[
-            tw`w-20 h-20 bg-[#16a34a] rounded-full items-center justify-center mb-5`,
+            tw`w-20 h-20 bg-[#1d4ed8] rounded-full items-center justify-center mb-5`,
             carStyle,
           ]}>
             <Ionicons name="car-sport" size={38} color="#ffffff" />
@@ -240,7 +240,7 @@ export default function EmployeeHome() {
               <View style={tw`items-center mr-3`}>
                 <View style={tw`w-3 h-3 rounded-full bg-[#16a34a]`} />
                 <View style={tw`w-px h-8 bg-gray-200 my-1`} />
-                <View style={tw`w-3 h-3 rounded-full bg-[#22C55E]`} />
+                <View style={tw`w-3 h-3 rounded-full bg-[#16a34a]`} />
               </View>
               <View style={tw`flex-1`}>
                 <TouchableOpacity
@@ -284,7 +284,7 @@ export default function EmployeeHome() {
 
             <TouchableOpacity
               onPress={handleSearch}
-              style={tw`bg-[#16a34a] py-4 rounded-xl flex-row justify-center items-center`}
+              style={tw`bg-[#1d4ed8] py-4 rounded-xl flex-row justify-center items-center`}
               accessibilityRole="button" accessibilityLabel="Search rides"
             >
               <Text style={tw`text-white font-bold text-base mr-2`}>Search Rides</Text>
@@ -314,7 +314,7 @@ export default function EmployeeHome() {
               accessibilityRole="button" accessibilityLabel="Live map"
             >
               <View style={tw`bg-green-50 w-12 h-12 rounded-full items-center justify-center mb-3`}>
-                <Ionicons name="map" size={24} color="#16a34a" />
+                <Ionicons name="map" size={24} color="#1d4ed8" />
               </View>
               <Text style={tw`text-sm text-[#0F172A] font-semibold`}>Live Map</Text>
             </TouchableOpacity>
@@ -349,7 +349,7 @@ export default function EmployeeHome() {
               style={tw`bg-[#f0fdf4] px-4 py-2 rounded-lg border border-green-100`}
               accessibilityRole="button" accessibilityLabel="Search usual route"
             >
-              <Text style={tw`text-[#16a34a] font-bold text-sm`}>Search</Text>
+              <Text style={tw`text-[#1d4ed8] font-bold text-sm`}>Search</Text>
             </TouchableOpacity>
           </View>
         </View>

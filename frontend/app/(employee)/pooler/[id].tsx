@@ -48,7 +48,7 @@ export default function PoolerProfile() {
 
       <ScrollView contentContainerStyle={tw`pb-10`}>
         <View style={tw`bg-[#0F172A] px-6 py-10 items-center rounded-b-[40px] shadow-md relative overflow-hidden`}>
-          <View style={tw`w-28 h-28 bg-gray-200 rounded-full items-center justify-center mb-4 border-4 border-[#16a34a] shadow-lg`}>
+          <View style={tw`w-28 h-28 bg-gray-200 rounded-full items-center justify-center mb-4 border-4 border-[#1d4ed8] shadow-lg`}>
              <Ionicons name="person" size={56} color="#64748b" />
           </View>
           <Text style={tw`text-white text-3xl font-extrabold mb-2`}>{pooler.user?.name}</Text>
@@ -89,7 +89,7 @@ export default function PoolerProfile() {
           <View style={tw`bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-4`}>
             <View style={tw`flex-row items-center mb-4`}>
               <View style={tw`w-10 h-10 bg-green-50 rounded-full items-center justify-center mr-3`}>
-                 <Ionicons name="route" size={20} color="#16a34a" />
+                 <Ionicons name="route" size={20} color="#1d4ed8" />
               </View>
               <View style={tw`flex-1`}>
                 <Text style={tw`text-gray-500 text-xs font-bold mb-0.5`}>Usual Route</Text>
@@ -99,7 +99,7 @@ export default function PoolerProfile() {
             <View style={tw`w-full h-px bg-gray-100 mb-4`} />
             <View style={tw`flex-row items-center`}>
               <View style={tw`w-10 h-10 bg-green-50 rounded-full items-center justify-center mr-3`}>
-                 <Ionicons name="time" size={20} color="#16a34a" />
+                 <Ionicons name="time" size={20} color="#1d4ed8" />
               </View>
               <View>
                 <Text style={tw`text-gray-500 text-xs font-bold mb-0.5`}>Usual Time</Text>
@@ -143,7 +143,7 @@ export default function PoolerProfile() {
           
           {pooler.is_live_available && (
             <TouchableOpacity 
-              style={tw`w-full bg-[#16a34a] py-4 rounded-xl items-center shadow-md flex-row justify-center mt-6`}
+              style={tw`w-full bg-[#1d4ed8] py-4 rounded-xl items-center shadow-md flex-row justify-center mt-6`}
               onPress={() => router.push('/(employee)/search')}
             >
               <Text style={tw`text-white font-bold text-lg mr-2`}>View Active Ride</Text>

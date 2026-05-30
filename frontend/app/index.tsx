@@ -10,21 +10,21 @@ const cardShadow = Platform.select({
   default: { shadowColor: '#0F172A', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.07, shadowRadius: 4, elevation: 2 },
 });
 const ctaShadow = Platform.select({
-  web: { boxShadow: '0 4px 14px rgba(34,197,94,0.35)' } as any,
-  default: { shadowColor: '#22C55E', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.35, shadowRadius: 10, elevation: 6 },
+  web: { boxShadow: '0 4px 14px rgba(29,78,216,0.35)' } as any,
+  default: { shadowColor: '#1d4ed8', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.35, shadowRadius: 10, elevation: 6 },
 });
 
 const TRUST_PILLARS = [
   { icon: 'shield-checkmark-outline' as const, color: '#16a34a', text: 'Verified coworkers only' },
-  { icon: 'map-outline' as const, color: '#1d4ed8', text: 'See live routes before booking' },
-  { icon: 'people-outline' as const, color: '#1d4ed8', text: 'Know your co-travellers in advance' },
+  { icon: 'map-outline' as const, color: '#16a34a', text: 'See live routes before booking' },
+  { icon: 'people-outline' as const, color: '#16a34a', text: 'Know your co-travellers in advance' },
 ];
 
 export default function LandingPage() {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-[#eff6ff] pt-${Platform.OS === 'android' ? '8' : '0'}`}>
+    <SafeAreaView style={tw`flex-1 bg-[#f0fdf4] pt-${Platform.OS === 'android' ? '8' : '0'}`}>
       <View style={tw`flex-1 justify-between px-8 py-10`}>
 
         {/* Hero */}
@@ -37,7 +37,7 @@ export default function LandingPage() {
             RouteMate
           </Text>
 
-          <Text style={tw`text-lg font-semibold text-[#1d4ed8] mb-8 text-center`}>
+          <Text style={tw`text-lg font-semibold text-[#16a34a] mb-8 text-center`}>
             Your trusted commute network
           </Text>
 
@@ -66,7 +66,7 @@ export default function LandingPage() {
         {/* CTA */}
         <View style={tw`gap-3`}>
           <TouchableOpacity
-            style={[tw`w-full rounded-2xl py-4 flex-row justify-center items-center`, { backgroundColor: '#22C55E' }, ctaShadow]}
+            style={[tw`w-full rounded-2xl py-4 flex-row justify-center items-center`, { backgroundColor: '#1d4ed8' }, ctaShadow]}
             onPress={() => router.push('/login')}
             accessibilityRole="button"
             accessibilityLabel="Get started"

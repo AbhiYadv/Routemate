@@ -32,7 +32,7 @@ export default function Login() {
   };
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-[#eff6ff]`}>
+    <SafeAreaView style={tw`flex-1 bg-[#f0fdf4]`}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={tw`flex-1`}
@@ -102,7 +102,7 @@ export default function Login() {
           </View>
 
           <TouchableOpacity
-            style={tw`w-full bg-[#16a34a] rounded-xl py-4 items-center shadow-md mb-6 ${isLoading ? 'opacity-70' : ''}`}
+            style={tw`w-full bg-[#1d4ed8] rounded-xl py-4 items-center shadow-md mb-6 ${isLoading ? 'opacity-70' : ''}`}
             onPress={handleLogin}
             disabled={isLoading}
             accessibilityRole="button"

@@ -76,12 +76,12 @@ function RideCard({ ride, onBook, onViewDetails, bookingRideId }: {
 
       <View style={tw`flex-row flex-wrap gap-2 mb-3`}>
         <View style={tw`bg-green-50 px-2 py-1 rounded border border-green-100 flex-row items-center`}>
-          <Ionicons name="shield-checkmark" size={12} color="#16a34a" style={tw`mr-1`} />
+          <Ionicons name="shield-checkmark" size={12} color="#1d4ed8" style={tw`mr-1`} />
           <Text style={tw`text-green-700 text-[10px] font-bold`}>{ride.visibility_badge}</Text>
         </View>
         {!!ride.route_match_score && (
           <View style={tw`bg-green-50 px-2 py-1 rounded border border-green-100 flex-row items-center`}>
-            <Ionicons name="leaf" size={12} color="#16a34a" style={tw`mr-1`} />
+            <Ionicons name="leaf" size={12} color="#1d4ed8" style={tw`mr-1`} />
             <Text style={tw`text-green-700 text-[10px] font-bold`}>Match: {ride.route_match_score}%</Text>
           </View>
         )}
@@ -135,7 +135,7 @@ function RideCard({ ride, onBook, onViewDetails, bookingRideId }: {
           <Text style={tw`text-[#0F172A] font-bold`}>View Details</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={tw`flex-1 bg-[#16a34a] py-3.5 rounded-xl items-center ${isFull || isBooking ? 'opacity-50' : ''}`}
+          style={tw`flex-1 bg-[#1d4ed8] py-3.5 rounded-xl items-center ${isFull || isBooking ? 'opacity-50' : ''}`}
           onPress={() => onBook(ride.id)}
           disabled={isFull || isBooking}
           accessibilityRole="button"
@@ -280,7 +280,7 @@ export default function SearchResults() {
           <Text style={tw`text-gray-600 font-bold text-lg mt-4 text-center`}>Connection issue</Text>
           <Text style={tw`text-gray-400 text-sm text-center mt-2`}>Check your connection and try again.</Text>
           <TouchableOpacity
-            style={tw`mt-6 bg-[#16a34a] px-8 py-3 rounded-xl`}
+            style={tw`mt-6 bg-[#1d4ed8] px-8 py-3 rounded-xl`}
             onPress={fetchData}
             accessibilityRole="button"
             accessibilityLabel="Retry search"

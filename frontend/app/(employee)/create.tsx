@@ -54,13 +54,13 @@ export default function PublishRide() {
         <Text style={tw`text-lg font-bold text-[#0F172A] mb-2`}>Visibility Mode</Text>
         <Text style={tw`text-gray-500 text-xs mb-4 font-medium`}>Control who can see and request to join your ride.</Text>
        
-        <TouchableOpacity style={tw`bg-green-50 border-2 border-[#16a34a] rounded-xl p-4 mb-3 flex-row items-center shadow-sm`}>
-          <Ionicons name="radio-button-on" size={24} color="#16a34a" style={tw`mr-3`} />
+        <TouchableOpacity style={tw`bg-green-50 border-2 border-[#1d4ed8] rounded-xl p-4 mb-3 flex-row items-center shadow-sm`}>
+          <Ionicons name="radio-button-on" size={24} color="#1d4ed8" style={tw`mr-3`} />
           <View style={tw`flex-1`}>
             <Text style={tw`text-[#0F172A] font-extrabold text-base mb-0.5`}>Company Circle</Text>
             <Text style={tw`text-green-800 text-xs font-medium`}>Only verified coworkers from your company can view and join.</Text>
           </View>
-          <Ionicons name="shield-checkmark" size={20} color="#16a34a" />
+          <Ionicons name="shield-checkmark" size={20} color="#1d4ed8" />
         </TouchableOpacity>
 
         <View style={tw`bg-white border border-gray-200 rounded-xl p-4 mb-3 flex-row items-center opacity-60`}>

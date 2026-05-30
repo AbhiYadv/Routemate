@@ -43,7 +43,7 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <SafeAreaView style={tw`flex-1 bg-[#F8FAFC] justify-center items-center`}>
-        <ActivityIndicator size="large" color="#16a34a" />
+        <ActivityIndicator size="large" color="#1d4ed8" />
       </SafeAreaView>
     );
   }
@@ -68,7 +68,7 @@ export default function AdminDashboard() {
         
         <View style={tw`flex-row flex-wrap justify-between mb-6`}>
           <View style={tw`bg-white w-[48%] p-4 rounded-2xl shadow-sm border border-gray-100 mb-4`}>
-            <Ionicons name="car" size={24} color="#16a34a" style={tw`mb-2`} />
+            <Ionicons name="car" size={24} color="#1d4ed8" style={tw`mb-2`} />
             <Text style={tw`text-2xl font-extrabold text-[#0F172A]`}>{data?.kpis?.completed_rides || 0}</Text>
             <Text style={tw`text-gray-500 text-xs font-bold mt-1`}>Completed Rides</Text>
           </View>
@@ -78,7 +78,7 @@ export default function AdminDashboard() {
             <Text style={tw`text-gray-500 text-xs font-bold mt-1`}>Active Poolers</Text>
           </View>
           <View style={tw`bg-white w-[48%] p-4 rounded-2xl shadow-sm border border-gray-100 mb-4`}>
-            <Ionicons name="leaf" size={24} color="#16a34a" style={tw`mb-2`} />
+            <Ionicons name="leaf" size={24} color="#1d4ed8" style={tw`mb-2`} />
             <Text style={tw`text-2xl font-extrabold text-[#0F172A]`}>{data?.kpis?.co2_saved_kg || 0} kg</Text>
             <Text style={tw`text-gray-500 text-xs font-bold mt-1`}>CO2 Saved</Text>
           </View>

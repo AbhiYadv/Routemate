@@ -15,7 +15,7 @@ interface Marker {
 const markerConfig: Record<string, { icon: any; color: string; label: string }> = {
   ride: { icon: 'car-outline', color: '#22C55E', label: 'Ride' },
   pooler: { icon: 'person-outline', color: '#9333ea', label: 'Pooler' },
-  pickup: { icon: 'location-outline', color: '#16a34a', label: 'Pickup' },
+  pickup: { icon: 'location-outline', color: '#1d4ed8', label: 'Pickup' },
   drop: { icon: 'flag-outline', color: '#ea580c', label: 'Drop' },
 };
 
@@ -33,7 +33,7 @@ export default function MapComponent({ userLocation, markers = [], polyline = []
       {/* Header */}
       <View style={tw`bg-white px-4 py-3 flex-row items-center border-b border-gray-100`}>
         <View style={tw`bg-green-50 w-8 h-8 rounded-full items-center justify-center mr-3`}>
-          <Ionicons name="map-outline" size={18} color="#16a34a" />
+          <Ionicons name="map-outline" size={18} color="#1d4ed8" />
         </View>
         <View>
           <Text style={tw`text-[#0F172A] font-bold text-sm`}>Live Network Map</Text>
@@ -122,7 +122,7 @@ export default function MapComponent({ userLocation, markers = [], polyline = []
 
         {userLocation && (
           <View style={tw`bg-green-50 rounded-xl p-3 flex-row items-center border border-green-100`}>
-            <Ionicons name="navigate-outline" size={16} color="#16a34a" style={tw`mr-2`} />
+            <Ionicons name="navigate-outline" size={16} color="#1d4ed8" style={tw`mr-2`} />
             <Text style={tw`text-green-700 text-xs font-semibold`}>
               Your location: {userLocation.latitude.toFixed(4)}, {userLocation.longitude.toFixed(4)}
             </Text>

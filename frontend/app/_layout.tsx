@@ -26,7 +26,7 @@ export default function RootLayout() {
   if (isLoading && inProtectedRoute) {
     return (
       <View style={tw`flex-1 justify-center items-center bg-white`}>
-        <ActivityIndicator size="large" color="#16a34a" />
+        <ActivityIndicator size="large" color="#1d4ed8" />
       </View>
     );
   }
