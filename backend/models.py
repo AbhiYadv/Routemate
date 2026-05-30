@@ -88,6 +88,30 @@ class UserInDB(UserBase):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
+class UserPublic(BaseModel):
+    """Safe user object — never contains password_hash or internal auth fields."""
+    id: str
+    company_id: str
+    name: str
+    email: str
+    phone: Optional[str] = None
+    role: RoleEnum
+    home_area: Optional[str] = None
+    office_location_id: Optional[str] = None
+    usual_start_time: Optional[str] = None
+    usual_return_time: Optional[str] = None
+    preferred_commute_mode: Optional[str] = None
+    safety_preference: Optional[str] = None
+    emergency_contact_name: Optional[str] = None
+    emergency_contact_phone: Optional[str] = None
+    current_latitude: Optional[float] = None
+    current_longitude: Optional[float] = None
+    location_permission_status: Optional[str] = None
+    last_location_updated_at: Optional[datetime] = None
+    verification_status: str = "VERIFIED"
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
 class OfficeLocation(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     company_id: str

@@ -70,8 +70,12 @@ export default function Bookings() {
     <SafeAreaView style={tw`flex-1 bg-[#F8FAFC] pt-${Platform.OS === 'android' ? '8' : '0'}`}>
       <View style={tw`bg-white px-6 py-4 shadow-sm z-10 flex-row justify-between items-center`}>
         <Text style={tw`text-[#0F172A] font-extrabold text-2xl`}>My Rides</Text>
-        <TouchableOpacity style={tw`bg-[#F8FAFC] p-2 rounded-full border border-gray-100`}>
-          <Ionicons name="time" size={20} color="#0F172A" />
+        <TouchableOpacity
+          style={tw`w-11 h-11 bg-[#F8FAFC] rounded-full border border-gray-100 items-center justify-center`}
+          accessibilityRole="button"
+          accessibilityLabel="Ride history"
+        >
+          <Ionicons name="time-outline" size={20} color="#0F172A" />
         </TouchableOpacity>
       </View>
 

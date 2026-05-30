@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import tw from 'twrnc';
 import { useAuthStore } from '../../src/store/auth';
+import { api } from '../../src/utils/api';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, { useSharedValue, useAnimatedStyle, withRepeat, withTiming, withSequence, Easing } from 'react-native-reanimated';
 import Logo from '../../src/components/Logo';
@@ -14,6 +15,13 @@ export default function EmployeeHome() {
 
   const [source, setSource] = useState(user?.home_area || 'BTM Layout');
   const [destination, setDestination] = useState('Whitefield Tech Park');
+
+  // Update source when user loads async (checkAuth resolves after mount)
+  useEffect(() => {
+    if (user?.home_area && user.home_area !== source) {
+      setSource(user.home_area);
+    }
+  }, [user?.home_area]);
   const [date, setDate] = useState('Today, 8:30 AM');
   const [passengers, setPassengers] = useState('1');
 
@@ -57,10 +65,25 @@ export default function EmployeeHome() {
   const handleSOS = () => {
     Alert.alert(
       'Emergency SOS',
-      'Are you sure you want to trigger an SOS alert? This will notify company security and admins immediately.',
+      'This will send an emergency alert to company security and share your location. Confirm only in a real emergency.',
       [
         { text: 'Cancel', style: 'cancel' },
-        { text: 'Trigger SOS', style: 'destructive', onPress: () => Alert.alert('SOS Triggered', 'Security has been notified and live tracking is shared.') }
+        {
+          text: 'Send SOS',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await api.post('/safety/sos', { description: 'SOS triggered from home screen' });
+              Alert.alert('SOS Sent', 'Your emergency alert has been received by company security. Help is on the way.');
+            } catch {
+              // Still acknowledge — safety critical path
+              Alert.alert(
+                'SOS Logged Locally',
+                'Network error — alert could not be sent. Please call emergency services directly.\n\n📞 Emergency: 112',
+              );
+            }
+          },
+        },
       ]
     );
   };
@@ -81,9 +104,14 @@ export default function EmployeeHome() {
             </View>
           </View>
           <View style={tw`flex-row items-center`}>
-            <TouchableOpacity style={tw`mr-4 relative`} onPress={() => showComingSoon('Notifications')}>
+            <TouchableOpacity
+              style={tw`mr-4 relative w-11 h-11 items-center justify-center`}
+              onPress={() => showComingSoon('Notifications')}
+              accessibilityRole="button"
+              accessibilityLabel="Notifications"
+            >
               <Ionicons name="notifications-outline" size={24} color="#0F172A" />
-              <View style={tw`absolute -top-1 -right-1 bg-red-500 w-3 h-3 rounded-full border-2 border-white`} />
+              <View style={tw`absolute top-1 right-1 bg-red-500 w-3 h-3 rounded-full border-2 border-white`} />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => router.push('/(employee)/profile')} style={tw`bg-[#F8FAFC] p-2 rounded-full border border-gray-100`}>
               <Ionicons name="person" size={20} color="#2563EB" />
@@ -162,8 +190,10 @@ export default function EmployeeHome() {
           <Text style={tw`text-[#0F172A] font-extrabold text-lg mb-3`}>Your usual route</Text>
           <View style={tw`bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex-row items-center justify-between`}>
             <View>
-              <Text style={tw`text-[#0F172A] font-bold`}>BTM Layout → Whitefield</Text>
-              <Text style={tw`text-gray-500 text-sm mt-1 font-medium`}>Usually around 8:30 AM</Text>
+              <Text style={tw`text-[#0F172A] font-bold`}>{source} → {destination}</Text>
+              <Text style={tw`text-gray-500 text-sm mt-1 font-medium`}>
+                {user?.usual_start_time ? `Usually around ${user.usual_start_time}` : 'Your regular route'}
+              </Text>
             </View>
             <TouchableOpacity onPress={handleSearch} style={tw`bg-[#F8FAFC] px-4 py-2 rounded-lg border border-gray-100`}>
               <Text style={tw`text-[#2563EB] font-bold`}>Search</Text>

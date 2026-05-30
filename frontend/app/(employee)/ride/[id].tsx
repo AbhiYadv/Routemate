@@ -13,16 +13,20 @@ export default function RideDetails() {
   const [loading, setLoading] = useState(true);
   const [booking, setBooking] = useState(false);
   const [showCallModal, setShowCallModal] = useState(false);
+  const [callLogged, setCallLogged] = useState(false);
+
+  const [fetchError, setFetchError] = useState(false);
 
   useEffect(() => {
     (async () => {
       try {
         const { data } = await api.get(`/rides/${id}`);
         setRide(data);
-      } catch (e) {
-        console.log("Ride details error:", e);
+      } catch (e: any) {
+        setFetchError(true);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     })();
   }, [id]);
 
@@ -30,21 +34,40 @@ export default function RideDetails() {
     setBooking(true);
     try {
       await api.post(`/rides/${id}/book`);
-      Alert.alert('Success', 'Ride booked successfully!', [
+      Alert.alert('Booked!', 'Ride booked successfully.', [
         { text: 'View My Rides', onPress: () => router.push('/(employee)/bookings') }
       ]);
     } catch (e: any) {
-      Alert.alert('Error', e.response?.data?.detail || 'Booking failed');
+      Alert.alert('Error', e.response?.data?.detail || 'Booking failed. Please try again.');
+    } finally {
+      setBooking(false);
     }
-    setBooking(false);
   };
 
   const showComingSoon = (feature: string) => {
     Alert.alert('Coming Soon', `${feature} is currently under development.`);
   };
 
-  if (loading) return <View style={tw`flex-1 justify-center items-center bg-[#F8FAFC]`}><Text>Loading ride details...</Text></View>;
-  if (!ride) return <View style={tw`flex-1 justify-center items-center bg-[#F8FAFC]`}><Text>Ride not found.</Text></View>;
+  if (loading) return (
+    <View style={tw`flex-1 justify-center items-center bg-[#F8FAFC]`}>
+      <Text style={tw`text-gray-500 font-medium`}>Loading ride details…</Text>
+    </View>
+  );
+  if (fetchError) return (
+    <SafeAreaView style={tw`flex-1 justify-center items-center bg-[#F8FAFC] px-8`}>
+      <Ionicons name="wifi-outline" size={48} color="#94a3b8" />
+      <Text style={tw`text-gray-700 font-bold text-lg mt-4 text-center`}>Couldn't load ride</Text>
+      <Text style={tw`text-gray-400 text-sm text-center mt-2`}>Check your connection and try again.</Text>
+      <TouchableOpacity onPress={() => router.back()} style={tw`mt-6 bg-[#2563EB] px-8 py-3 rounded-xl`} accessibilityRole="button" accessibilityLabel="Go back">
+        <Text style={tw`text-white font-bold`}>Go Back</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
+  );
+  if (!ride) return (
+    <View style={tw`flex-1 justify-center items-center bg-[#F8FAFC]`}>
+      <Text style={tw`text-gray-500`}>Ride not found.</Text>
+    </View>
+  );
 
   let markers: any[] = [];
   if (ride.origin_latitude) markers.push({ id: 'start', latitude: ride.origin_latitude, longitude: ride.origin_longitude, type: 'ride', title: 'Driver Start', subtitle: ride.origin_area });
@@ -65,7 +88,12 @@ export default function RideDetails() {
       {/* Top Map */}
       <View style={tw`h-[35%] bg-gray-200 relative`}>
         <MapComponent markers={markers} polyline={polyline} />
-        <TouchableOpacity onPress={() => router.back()} style={tw`absolute top-4 left-4 bg-white w-10 h-10 rounded-full shadow-md items-center justify-center`}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={tw`absolute top-4 left-4 bg-white w-12 h-12 rounded-full shadow-md items-center justify-center`}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+        >
           <Ionicons name="arrow-back" size={24} color="#0F172A" />
         </TouchableOpacity>
       </View>
@@ -90,11 +118,27 @@ export default function RideDetails() {
             </TouchableOpacity>
             
             <View style={tw`flex-row`}>
-              <TouchableOpacity onPress={() => setShowCallModal(true)} style={tw`bg-green-100 w-10 h-10 rounded-full items-center justify-center mr-2 border border-green-200`}>
-                <Ionicons name="call" size={18} color="#16a34a" />
+              <TouchableOpacity
+                onPress={async () => {
+                  setShowCallModal(true);
+                  if (!callLogged) {
+                    setCallLogged(true);
+                    try { await api.post('/calls', { ride_id: ride.id, receiver_id: ride.driver_user_id }); } catch {}
+                  }
+                }}
+                style={tw`bg-green-100 w-12 h-12 rounded-full items-center justify-center mr-2 border border-green-200`}
+                accessibilityRole="button"
+                accessibilityLabel={`Call ${ride.driver?.name || 'driver'}`}
+              >
+                <Ionicons name="call" size={20} color="#16a34a" />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => router.push(`/(employee)/chat?ride_id=${ride.id}&receiver_id=${ride.driver_user_id}&receiver_name=${ride.driver?.name}`)} style={tw`bg-blue-100 w-10 h-10 rounded-full items-center justify-center border border-blue-200`}>
-                <Ionicons name="chatbubble" size={18} color="#2563EB" />
+              <TouchableOpacity
+                onPress={() => router.push(`/(employee)/chat?ride_id=${ride.id}&receiver_id=${ride.driver_user_id}&receiver_name=${ride.driver?.name}`)}
+                style={tw`bg-blue-100 w-12 h-12 rounded-full items-center justify-center border border-blue-200`}
+                accessibilityRole="button"
+                accessibilityLabel={`Message ${ride.driver?.name || 'driver'}`}
+              >
+                <Ionicons name="chatbubble" size={20} color="#2563EB" />
               </TouchableOpacity>
             </View>
           </View>
