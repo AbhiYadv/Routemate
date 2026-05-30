@@ -16,17 +16,23 @@ export default function RootLayout() {
   useEffect(() => {
     if (isLoading) return;
 
-    const inAuthGroup = segments[0] === '(auth)';
-    const inEmployeeGroup = segments[0] === '(employee)';
-    const inAdminGroup = segments[0] === '(admin)';
+    // Protected route groups — any session-required screen lives here
+    const inProtectedRoute =
+      segments[0] === '(employee)' || segments[0] === '(admin)';
 
     if (!user) {
-      // If not logged in and not on a public page, go to index (Landing)
-      if (segments[0] !== 'login' && segments[0] !== '') {
+      // Not authenticated: if we're inside a protected route, kick back to root.
+      // This is the ONLY place that navigates after logout — profile.tsx must NOT
+      // call router.replace('/') because it runs inside the tab navigator and
+      // resolves to the tab's own home, not the app root.
+      if (inProtectedRoute) {
         router.replace('/');
       }
     } else {
-      // Based on role
+      // Authenticated: send to the correct group for the user's role
+      const inEmployeeGroup = segments[0] === '(employee)';
+      const inAdminGroup = segments[0] === '(admin)';
+
       if (user.role === 'EMPLOYEE' || user.role === 'DRIVER') {
         if (!inEmployeeGroup) router.replace('/(employee)');
       } else if (user.role === 'COMPANY_ADMIN') {
@@ -38,7 +44,7 @@ export default function RootLayout() {
   if (isLoading) {
     return (
       <View style={tw`flex-1 justify-center items-center bg-white`}>
-        <ActivityIndicator size="large" color="#0ea5e9" />
+        <ActivityIndicator size="large" color="#2563EB" />
       </View>
     );
   }

@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, TouchableOpacity, ActivityIndicator, Platform, ScrollView } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, ActivityIndicator, Platform, ScrollView, Alert } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import tw from 'twrnc';
@@ -98,7 +98,7 @@ export default function LiveMap() {
             <Text style={tw`font-bold ${activeTab === 'poolers' ? 'text-white' : 'text-gray-500'}`}>Poolers</Text>
           </TouchableOpacity>
         </View>
-        <View style={tw`w-10`} /> {/* Spacer for alignment */}
+        <View style={tw`w-10`} />
       </View>
 
       {errorMsg ? (
@@ -154,7 +154,7 @@ export default function LiveMap() {
                       </View>
                     </View>
                     <View style={tw`flex-row gap-2`}>
-                      <TouchableOpacity style={tw`bg-blue-50 w-8 h-8 rounded-full items-center justify-center border border-blue-100`} onPress={() => alert('Message soon')}>
+                      <TouchableOpacity style={tw`bg-blue-50 w-8 h-8 rounded-full items-center justify-center border border-blue-100`} onPress={() => Alert.alert('Coming Soon', 'Messaging from the map is coming soon.')}>
                         <Ionicons name="chatbubble" size={14} color="#2563EB" />
                       </TouchableOpacity>
                       <TouchableOpacity style={tw`bg-[#0F172A] px-4 py-2 rounded-lg justify-center`} onPress={() => router.push(`/(employee)/pooler/${p.user_id}`)}>
