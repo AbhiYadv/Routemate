@@ -35,7 +35,7 @@ export default function MapComponent({ userLocation, markers = [], polyline = []
 
         if (m.type === 'pooler') { bgColor = '#9333ea'; iconName = 'person'; }
         if (m.type === 'ride') { bgColor = '#22C55E'; iconName = 'car'; }
-        if (m.type === 'pickup') { bgColor = '#2563EB'; iconName = 'location'; }
+        if (m.type === 'pickup') { bgColor = '#16a34a'; iconName = 'location'; }
         if (m.type === 'drop') { bgColor = '#ea580c'; iconName = 'flag'; }
 
         return (
@@ -55,7 +55,7 @@ export default function MapComponent({ userLocation, markers = [], polyline = []
       {polyline.length > 0 && (
         <Polyline 
           coordinates={polyline} 
-          strokeColor="#2563EB" 
+          strokeColor="#16a34a" 
           strokeWidth={4} 
           lineDashPattern={[1]}
         />

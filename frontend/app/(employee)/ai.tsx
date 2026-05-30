@@ -99,7 +99,7 @@ export default function AiAssistant() {
               style={tw`bg-white border border-gray-200 px-3 py-1.5 rounded-full shadow-sm`}
               onPress={() => setInputText(q)}
             >
-              <Text style={tw`text-[#2563EB] text-xs font-medium`}>{q}</Text>
+              <Text style={tw`text-[#16a34a] text-xs font-medium`}>{q}</Text>
             </TouchableOpacity>
           ))}
         </View>

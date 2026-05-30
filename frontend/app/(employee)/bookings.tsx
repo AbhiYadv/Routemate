@@ -59,10 +59,10 @@ export default function Bookings() {
 
   const TabButton = ({ title }: { title: any }) => (
     <TouchableOpacity 
-      style={tw`px-4 py-2 ${activeTab === title ? 'border-b-2 border-[#2563EB]' : ''}`}
+      style={tw`px-4 py-2 ${activeTab === title ? 'border-b-2 border-[#16a34a]' : ''}`}
       onPress={() => setActiveTab(title)}
     >
-      <Text style={tw`${activeTab === title ? 'text-[#2563EB] font-bold' : 'text-gray-500 font-medium'}`}>{title}</Text>
+      <Text style={tw`${activeTab === title ? 'text-[#16a34a] font-bold' : 'text-gray-500 font-medium'}`}>{title}</Text>
     </TouchableOpacity>
   );
 
@@ -91,7 +91,7 @@ export default function Bookings() {
       <ScrollView contentContainerStyle={tw`p-6 pb-20`}>
         {loading ? (
           <View style={tw`items-center justify-center mt-10`}>
-            <ActivityIndicator size="large" color="#2563EB" />
+            <ActivityIndicator size="large" color="#16a34a" />
           </View>
         ) : filteredBookings.length === 0 ? (
           <View style={tw`items-center justify-center mt-20`}>
@@ -103,7 +103,7 @@ export default function Bookings() {
               Search for a trusted ride to work and your bookings will appear here.
             </Text>
             <TouchableOpacity 
-              style={tw`bg-[#2563EB] px-8 py-4 rounded-xl shadow-sm`}
+              style={tw`bg-[#16a34a] px-8 py-4 rounded-xl shadow-sm`}
               onPress={() => router.push('/(employee)/search')}
             >
               <Text style={tw`text-white font-bold text-lg`}>Find a Ride</Text>
@@ -124,8 +124,8 @@ export default function Bookings() {
                   <View>
                     <Text style={tw`font-bold text-[#0F172A] text-base`}>{b.ride?.driver_name || 'Pooler'}</Text>
                     <View style={tw`flex-row items-center`}>
-                      <Ionicons name="shield-checkmark" size={12} color="#2563EB" style={tw`mr-1`} />
-                      <Text style={tw`text-blue-700 text-xs font-semibold`}>{b.ride?.company_name}</Text>
+                      <Ionicons name="shield-checkmark" size={12} color="#16a34a" style={tw`mr-1`} />
+                      <Text style={tw`text-green-700 text-xs font-semibold`}>{b.ride?.company_name}</Text>
                     </View>
                   </View>
                 </View>
@@ -136,7 +136,7 @@ export default function Bookings() {
 
               <View style={tw`bg-[#F8FAFC] rounded-xl p-4 border border-gray-100 mb-4`}>
                 <View style={tw`flex-row items-center mb-2`}>
-                  <View style={tw`w-2 h-2 rounded-full bg-[#2563EB] mr-3`} />
+                  <View style={tw`w-2 h-2 rounded-full bg-[#16a34a] mr-3`} />
                   <Text style={tw`text-[#0F172A] font-semibold text-sm`}>{b.ride?.origin_area}</Text>
                 </View>
                 <View style={tw`flex-row items-center`}>

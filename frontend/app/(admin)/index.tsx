@@ -43,7 +43,7 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <SafeAreaView style={tw`flex-1 bg-[#F8FAFC] justify-center items-center`}>
-        <ActivityIndicator size="large" color="#2563EB" />
+        <ActivityIndicator size="large" color="#16a34a" />
       </SafeAreaView>
     );
   }
@@ -68,7 +68,7 @@ export default function AdminDashboard() {
         
         <View style={tw`flex-row flex-wrap justify-between mb-6`}>
           <View style={tw`bg-white w-[48%] p-4 rounded-2xl shadow-sm border border-gray-100 mb-4`}>
-            <Ionicons name="car" size={24} color="#2563EB" style={tw`mb-2`} />
+            <Ionicons name="car" size={24} color="#16a34a" style={tw`mb-2`} />
             <Text style={tw`text-2xl font-extrabold text-[#0F172A]`}>{data?.kpis?.completed_rides || 0}</Text>
             <Text style={tw`text-gray-500 text-xs font-bold mt-1`}>Completed Rides</Text>
           </View>
@@ -122,8 +122,8 @@ export default function AdminDashboard() {
             </View>
             <Text style={tw`text-gray-500 text-xs mb-2 font-medium`}>{fq.ride_route}</Text>
             <Text style={tw`text-[#0F172A] italic mb-3`}>"{fq.feedback}"</Text>
-            <View style={tw`bg-blue-50 self-start px-3 py-1 rounded-full border border-blue-100`}>
-              <Text style={tw`text-blue-700 text-xs font-bold`}>Reward Impact: {fq.reward_impact}</Text>
+            <View style={tw`bg-green-50 self-start px-3 py-1 rounded-full border border-green-100`}>
+              <Text style={tw`text-green-700 text-xs font-bold`}>Reward Impact: {fq.reward_impact}</Text>
             </View>
           </View>
         ))}

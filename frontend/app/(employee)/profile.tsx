@@ -61,9 +61,9 @@ export default function Profile() {
           </View>
           <Text style={tw`text-2xl font-bold text-gray-900`}>{user?.name}</Text>
           <Text style={tw`text-gray-500`}>{user?.email}</Text>
-          <View style={tw`bg-blue-50 px-3 py-1 rounded-full mt-2 flex-row items-center`}>
-            <Ionicons name="checkmark-circle" size={14} color="#0284c7" style={tw`mr-1`} />
-            <Text style={tw`text-blue-700 text-xs font-semibold`}>Verified Employee</Text>
+          <View style={tw`bg-green-50 px-3 py-1 rounded-full mt-2 flex-row items-center`}>
+            <Ionicons name="checkmark-circle" size={14} color="#16a34a" style={tw`mr-1`} />
+            <Text style={tw`text-green-700 text-xs font-semibold`}>Verified Employee</Text>
           </View>
         </View>
 
@@ -86,7 +86,7 @@ export default function Profile() {
 
         {/* Publish Ride CTA */}
         <TouchableOpacity
-          style={tw`w-full bg-[#2563EB] py-4 rounded-xl flex-row justify-center items-center mb-3 shadow-sm`}
+          style={tw`w-full bg-[#16a34a] py-4 rounded-xl flex-row justify-center items-center mb-3 shadow-sm`}
           onPress={() => router.push('/(employee)/create')}
           accessibilityRole="button"
           accessibilityLabel="Publish a ride"

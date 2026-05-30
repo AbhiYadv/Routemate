@@ -22,7 +22,7 @@ export default function EmployeeLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#2563EB',
+        tabBarActiveTintColor: '#16a34a',
         tabBarInactiveTintColor: '#94a3b8',
         tabBarStyle: TAB_STYLE,
         tabBarLabelStyle: {

@@ -102,7 +102,7 @@ export default function Login() {
           </View>
 
           <TouchableOpacity
-            style={tw`w-full bg-[#2563EB] rounded-xl py-4 items-center shadow-md mb-6 ${isLoading ? 'opacity-70' : ''}`}
+            style={tw`w-full bg-[#16a34a] rounded-xl py-4 items-center shadow-md mb-6 ${isLoading ? 'opacity-70' : ''}`}
             onPress={handleLogin}
             disabled={isLoading}
             accessibilityRole="button"
