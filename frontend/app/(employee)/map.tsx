@@ -144,7 +144,7 @@ export default function LiveMap() {
   if (loading) {
     return (
       <SafeAreaView style={tw`flex-1 justify-center items-center bg-[#F8FAFC]`}>
-        <ActivityIndicator size="large" color="#2563EB" />
+        <ActivityIndicator size="large" color="#1d4ed8" />
         <Text style={tw`mt-4 text-gray-500 font-medium`}>Finding live network…</Text>
       </SafeAreaView>
     );
@@ -153,13 +153,13 @@ export default function LiveMap() {
   if (errorMsg) {
     return (
       <SafeAreaView style={tw`flex-1 justify-center items-center bg-[#F8FAFC] px-8`}>
-        <View style={tw`w-20 h-20 bg-blue-50 rounded-full items-center justify-center mb-6`}>
-          <Ionicons name="map-outline" size={40} color="#2563EB" />
+        <View style={tw`w-20 h-20 bg-green-50 rounded-full items-center justify-center mb-6`}>
+          <Ionicons name="map-outline" size={40} color="#1d4ed8" />
         </View>
         <Text style={tw`text-[#0F172A] font-bold text-xl text-center mb-3`}>Map unavailable</Text>
         <Text style={tw`text-gray-500 text-sm text-center mb-8 leading-relaxed`}>{errorMsg}</Text>
         <TouchableOpacity
-          style={tw`bg-[#2563EB] px-8 py-4 rounded-xl shadow-sm`}
+          style={tw`bg-[#1d4ed8] px-8 py-4 rounded-xl shadow-sm`}
           onPress={() => router.push('/(employee)')}
           accessibilityRole="button"
           accessibilityLabel="Search rides manually"
@@ -219,7 +219,7 @@ export default function LiveMap() {
           accessibilityRole="button"
           accessibilityLabel="Recenter map"
         >
-          <Ionicons name="locate-outline" size={22} color="#2563EB" />
+          <Ionicons name="locate-outline" size={22} color="#1d4ed8" />
         </TouchableOpacity>
 
         {/* Bottom sheet */}

@@ -119,7 +119,7 @@ export default function ChatScreen() {
                   <View key={msg.id || idx} style={tw`mb-4 ${isMe ? 'items-end' : 'items-start'}`}>
                     <View
                       style={tw`max-w-[75%] p-3 rounded-2xl ${
-                        isMe ? 'bg-[#2563EB] rounded-br-sm' : 'bg-white border border-gray-200 rounded-bl-sm shadow-sm'
+                        isMe ? 'bg-[#1d4ed8] rounded-br-sm' : 'bg-white border border-gray-200 rounded-bl-sm shadow-sm'
                       }`}
                     >
                       <Text style={tw`${isMe ? 'text-white' : 'text-[#0F172A]'}`}>{msg.message}</Text>
@@ -145,7 +145,7 @@ export default function ChatScreen() {
               accessibilityLabel="Message input"
             />
             <TouchableOpacity
-              style={tw`w-11 h-11 bg-[#2563EB] rounded-full items-center justify-center ${!inputText.trim() ? 'opacity-40' : ''}`}
+              style={tw`w-11 h-11 bg-[#1d4ed8] rounded-full items-center justify-center ${!inputText.trim() ? 'opacity-40' : ''}`}
               onPress={sendMessage}
               disabled={!inputText.trim()}
               accessibilityRole="button"

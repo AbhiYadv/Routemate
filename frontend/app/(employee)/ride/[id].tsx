@@ -71,7 +71,7 @@ export default function RideDetails() {
       <Text style={tw`text-gray-400 text-sm text-center mt-2`}>Check your connection and try again.</Text>
       <TouchableOpacity
         onPress={() => router.back()}
-        style={tw`mt-6 bg-[#2563EB] px-8 py-3 rounded-xl`}
+        style={tw`mt-6 bg-[#1d4ed8] px-8 py-3 rounded-xl`}
         accessibilityRole="button" accessibilityLabel="Go back"
       >
         <Text style={tw`text-white font-bold`}>Go Back</Text>
@@ -132,8 +132,8 @@ export default function RideDetails() {
               style={tw`flex-row items-center flex-1`}
               accessibilityRole="button" accessibilityLabel={`View ${ride.driver?.name}'s profile`}
             >
-              <View style={tw`w-14 h-14 bg-blue-50 rounded-full items-center justify-center mr-3 border border-blue-100`}>
-                <Ionicons name="person" size={28} color="#2563EB" />
+              <View style={tw`w-14 h-14 bg-green-50 rounded-full items-center justify-center mr-3 border border-green-100`}>
+                <Ionicons name="person" size={28} color="#1d4ed8" />
               </View>
               <View>
                 <Text style={tw`text-xl font-bold text-[#0F172A]`}>{ride.driver?.name}</Text>
@@ -157,23 +157,23 @@ export default function RideDetails() {
                 style={tw`w-12 h-12 bg-green-50 rounded-full items-center justify-center border border-green-100`}
                 accessibilityRole="button" accessibilityLabel={`Call ${ride.driver?.name || 'driver'}`}
               >
-                <Ionicons name="call" size={20} color="#16a34a" />
+                <Ionicons name="call" size={20} color="#1d4ed8" />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => router.push(`/(employee)/chat?ride_id=${ride.id}&receiver_id=${ride.driver_user_id}&receiver_name=${ride.driver?.name}`)}
-                style={tw`w-12 h-12 bg-blue-50 rounded-full items-center justify-center border border-blue-100`}
+                style={tw`w-12 h-12 bg-green-50 rounded-full items-center justify-center border border-green-100`}
                 accessibilityRole="button" accessibilityLabel={`Message ${ride.driver?.name || 'driver'}`}
               >
-                <Ionicons name="chatbubble" size={20} color="#2563EB" />
+                <Ionicons name="chatbubble" size={20} color="#1d4ed8" />
               </TouchableOpacity>
             </View>
           </View>
 
           {/* Badges */}
           <View style={tw`flex-row flex-wrap gap-2`}>
-            <View style={tw`bg-blue-50 px-3 py-1.5 rounded-full flex-row items-center border border-blue-100`}>
-              <Ionicons name="shield-checkmark" size={13} color="#2563EB" style={tw`mr-1`} />
-              <Text style={tw`text-blue-700 text-xs font-semibold`}>Company Circle · {ride.company_name}</Text>
+            <View style={tw`bg-green-50 px-3 py-1.5 rounded-full flex-row items-center border border-green-100`}>
+              <Ionicons name="shield-checkmark" size={13} color="#1d4ed8" style={tw`mr-1`} />
+              <Text style={tw`text-green-700 text-xs font-semibold`}>Company Circle · {ride.company_name}</Text>
             </View>
             {ride.pooler?.vehicle_type && (
               <View style={tw`bg-gray-50 px-3 py-1.5 rounded-full flex-row items-center border border-gray-200`}>
@@ -190,7 +190,7 @@ export default function RideDetails() {
             {[
               { label: 'Route Match', value: `${ride.route_match_score || 0}%`, color: '#22C55E' },
               { label: 'Detour', value: `+${ride.detour_minutes || 0} min`, color: '#ea580c' },
-              { label: 'Seats Left', value: `${ride.available_seats}/${ride.total_seats}`, color: '#2563EB' },
+              { label: 'Seats Left', value: `${ride.available_seats}/${ride.total_seats}`, color: '#1d4ed8' },
             ].map((stat, i) => (
               <View key={stat.label} style={tw`flex-1 py-4 items-center ${i < 2 ? 'border-r border-gray-100' : ''}`}>
                 <Text style={[tw`text-xl font-bold`, { color: stat.color }]}>{stat.value}</Text>
@@ -234,7 +234,7 @@ export default function RideDetails() {
                 )}
                 <View style={[
                   tw`w-6 h-6 rounded-full items-center justify-center mr-4 mt-1 z-10`,
-                  { backgroundColor: stop.type === 'PICKUP' ? '#2563EB' : '#ea580c' },
+                  { backgroundColor: stop.type === 'PICKUP' ? '#1d4ed8' : '#ea580c' },
                 ]}>
                   <View style={tw`w-2 h-2 rounded-full bg-white`} />
                 </View>
@@ -280,7 +280,7 @@ export default function RideDetails() {
           </Text>
         </View>
         <TouchableOpacity
-          style={tw`w-full bg-[#2563EB] py-4 rounded-xl items-center shadow-md ${ride.available_seats === 0 || booking ? 'opacity-50' : ''}`}
+          style={tw`w-full bg-[#1d4ed8] py-4 rounded-xl items-center shadow-md ${ride.available_seats === 0 || booking ? 'opacity-50' : ''}`}
           onPress={handleBook}
           disabled={ride.available_seats === 0 || booking}
           accessibilityRole="button"
@@ -298,8 +298,8 @@ export default function RideDetails() {
           <Text style={tw`text-gray-400 font-semibold text-xs mb-8 uppercase tracking-widest`}>
             RouteMate Secure Call
           </Text>
-          <View style={tw`w-28 h-28 bg-[#1E3A5F] rounded-full mb-5 items-center justify-center border-2 border-[#2563EB]/40`}>
-            <Ionicons name="person" size={56} color="#60A5FA" />
+          <View style={tw`w-28 h-28 bg-[#14532d] rounded-full mb-5 items-center justify-center border-2 border-[#1d4ed8]/40`}>
+            <Ionicons name="person" size={56} color="#4ade80" />
           </View>
           <Text style={tw`text-white text-2xl font-bold mb-1`}>{ride.driver?.name}</Text>
           <Text style={tw`text-[#22C55E] text-sm mb-14 font-semibold`}>Connected · 00:12</Text>

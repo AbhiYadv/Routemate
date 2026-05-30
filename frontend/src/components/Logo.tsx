@@ -38,7 +38,7 @@ export default function Logo({ size = 'large' }: { size?: 'small' | 'medium' | '
       
       {/* Trust/Verified Shield Badge (Blue) */}
       <View style={tw`absolute bottom-1 right-1 bg-white rounded-full shadow-sm`}>
-        <Ionicons name="shield-checkmark" size={badgeSize} color="#2563EB" />
+        <Ionicons name="shield-checkmark" size={badgeSize} color="#1d4ed8" />
       </View>
     </View>
   );

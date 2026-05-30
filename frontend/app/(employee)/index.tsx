@@ -30,7 +30,7 @@ function NotificationPanel({
   };
   const colorMap: Record<string, string> = {
     booking: '#22C55E',
-    ride_update: '#2563EB',
+    ride_update: '#1d4ed8',
     sos: '#dc2626',
     system: '#6366f1',
   };
@@ -43,7 +43,7 @@ function NotificationPanel({
           <View style={tw`flex-row items-center gap-4`}>
             {notifications.length > 0 && (
               <TouchableOpacity onPress={markAllRead}>
-                <Text style={tw`text-[#2563EB] text-sm font-semibold`}>Mark all read</Text>
+                <Text style={tw`text-[#1d4ed8] text-sm font-semibold`}>Mark all read</Text>
               </TouchableOpacity>
             )}
             <TouchableOpacity
@@ -58,7 +58,7 @@ function NotificationPanel({
 
         {notifications.length === 0 ? (
           <View style={tw`flex-1 items-center justify-center`}>
-            <View style={tw`w-16 h-16 bg-blue-50 rounded-full items-center justify-center mb-4`}>
+            <View style={tw`w-16 h-16 bg-green-50 rounded-full items-center justify-center mb-4`}>
               <Ionicons name="notifications-outline" size={32} color="#93c5fd" />
             </View>
             <Text style={tw`text-[#0F172A] font-bold text-lg`}>All caught up</Text>
@@ -71,7 +71,7 @@ function NotificationPanel({
             {notifications.map((n) => (
               <View
                 key={n.id}
-                style={tw`bg-white rounded-2xl p-4 mb-3 border ${n.read ? 'border-gray-100' : 'border-blue-100'} shadow-sm flex-row items-start`}
+                style={tw`bg-white rounded-2xl p-4 mb-3 border ${n.read ? 'border-gray-100' : 'border-green-100'} shadow-sm flex-row items-start`}
               >
                 <View
                   style={[
@@ -84,7 +84,7 @@ function NotificationPanel({
                 <View style={tw`flex-1`}>
                   <View style={tw`flex-row items-center justify-between mb-0.5`}>
                     <Text style={tw`text-[#0F172A] font-bold text-sm`}>{n.title}</Text>
-                    {!n.read && <View style={tw`w-2 h-2 rounded-full bg-[#2563EB]`} />}
+                    {!n.read && <View style={tw`w-2 h-2 rounded-full bg-[#1d4ed8]`} />}
                   </View>
                   <Text style={tw`text-gray-500 text-xs leading-relaxed`}>{n.body}</Text>
                   <Text style={tw`text-gray-400 text-[10px] mt-1.5`}>
@@ -208,31 +208,27 @@ export default function EmployeeHome() {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => router.push('/(employee)/profile')}
-              style={tw`w-11 h-11 bg-blue-50 rounded-full items-center justify-center border border-blue-100`}
+              style={tw`w-11 h-11 bg-green-50 rounded-full items-center justify-center border border-green-100`}
               accessibilityRole="button" accessibilityLabel="Profile"
             >
-              <Ionicons name="person" size={20} color="#2563EB" />
+              <Ionicons name="person" size={20} color="#1d4ed8" />
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* ── Premium Hero — deep navy → blue gradient ── */}
-        <View style={tw`bg-[#0F172A] px-6 py-10 items-center relative overflow-hidden`}>
-          {/* Subtle glow blob */}
-          <View style={tw`absolute -top-10 -right-10 w-48 h-48 bg-[#2563EB] opacity-20 rounded-full`} />
-          <View style={tw`absolute bottom-0 -left-8 w-32 h-32 bg-[#3B82F6] opacity-10 rounded-full`} />
-
+        {/* ── Hero — solid blue ── */}
+        <View style={tw`bg-[#16a34a] px-6 py-10 items-center`}>
           <Animated.View style={[
-            tw`w-20 h-20 bg-[#1E3A5F] rounded-full items-center justify-center mb-5 border border-[#2563EB] border-opacity-40`,
+            tw`w-20 h-20 bg-[#1d4ed8] rounded-full items-center justify-center mb-5`,
             carStyle,
           ]}>
-            <Ionicons name="car-sport" size={38} color="#60A5FA" />
+            <Ionicons name="car-sport" size={38} color="#ffffff" />
           </Animated.View>
 
           <Text style={tw`text-white text-2xl font-bold mb-1 text-center tracking-tight`}>
             Find trusted rides to work.
           </Text>
-          <Text style={tw`text-blue-300 text-sm text-center font-medium`}>
+          <Text style={[tw`text-sm text-center font-medium`, { color: 'rgba(255,255,255,0.8)' }]}>
             See who's going your way before you book.
           </Text>
         </View>
@@ -242,9 +238,9 @@ export default function EmployeeHome() {
           <View style={tw`bg-white rounded-2xl p-5 shadow-lg border border-gray-100`}>
             <View style={tw`flex-row items-center mb-4`}>
               <View style={tw`items-center mr-3`}>
-                <View style={tw`w-3 h-3 rounded-full bg-[#2563EB]`} />
+                <View style={tw`w-3 h-3 rounded-full bg-[#16a34a]`} />
                 <View style={tw`w-px h-8 bg-gray-200 my-1`} />
-                <View style={tw`w-3 h-3 rounded-full bg-[#22C55E]`} />
+                <View style={tw`w-3 h-3 rounded-full bg-[#16a34a]`} />
               </View>
               <View style={tw`flex-1`}>
                 <TouchableOpacity
@@ -288,7 +284,7 @@ export default function EmployeeHome() {
 
             <TouchableOpacity
               onPress={handleSearch}
-              style={tw`bg-[#2563EB] py-4 rounded-xl flex-row justify-center items-center`}
+              style={tw`bg-[#1d4ed8] py-4 rounded-xl flex-row justify-center items-center`}
               accessibilityRole="button" accessibilityLabel="Search rides"
             >
               <Text style={tw`text-white font-bold text-base mr-2`}>Search Rides</Text>
@@ -317,8 +313,8 @@ export default function EmployeeHome() {
               onPress={() => router.push('/(employee)/map')}
               accessibilityRole="button" accessibilityLabel="Live map"
             >
-              <View style={tw`bg-blue-50 w-12 h-12 rounded-full items-center justify-center mb-3`}>
-                <Ionicons name="map" size={24} color="#2563EB" />
+              <View style={tw`bg-green-50 w-12 h-12 rounded-full items-center justify-center mb-3`}>
+                <Ionicons name="map" size={24} color="#1d4ed8" />
               </View>
               <Text style={tw`text-sm text-[#0F172A] font-semibold`}>Live Map</Text>
             </TouchableOpacity>
@@ -350,10 +346,10 @@ export default function EmployeeHome() {
             </View>
             <TouchableOpacity
               onPress={handleSearch}
-              style={tw`bg-[#EFF6FF] px-4 py-2 rounded-lg border border-blue-100`}
+              style={tw`bg-[#f0fdf4] px-4 py-2 rounded-lg border border-green-100`}
               accessibilityRole="button" accessibilityLabel="Search usual route"
             >
-              <Text style={tw`text-[#2563EB] font-bold text-sm`}>Search</Text>
+              <Text style={tw`text-[#1d4ed8] font-bold text-sm`}>Search</Text>
             </TouchableOpacity>
           </View>
         </View>
