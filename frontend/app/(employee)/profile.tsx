@@ -1,4 +1,5 @@
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, Platform, Alert } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, Platform, Alert, ActivityIndicator } from 'react-native';
+import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import tw from 'twrnc';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,6 +8,7 @@ import { useAuthStore } from '../../src/store/auth';
 export default function Profile() {
   const router = useRouter();
   const { user, logout } = useAuthStore();
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const handleLogout = () => {
     Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
@@ -15,24 +17,22 @@ export default function Profile() {
         text: 'Sign Out',
         style: 'destructive',
         onPress: async () => {
-          if (__DEV__) console.log('[Logout] clearing auth state');
-          await logout();
-          if (__DEV__) console.log('[Logout] auth cleared — navigating to /login');
-
-          if (Platform.OS === 'web') {
-            // On web, router.replace does not fully unmount the Expo Router tab
-            // navigator — it updates the URL but keeps the React component tree
-            // alive, leaving the frozen Home tab visible and accessible via back.
-            // window.location.replace() forces a full page reload, clearing all
-            // React state and browser history entry in a single step.
-            // @ts-ignore
-            window.location.replace('/');
-          } else {
-            // On native, use the global `router` object (not the hook) so we are
-            // guaranteed to be operating at the root-level navigator, not the tab.
-            // dismissAll clears any modals/sheets; replace navigates to login.
-            try { router.dismissAll(); } catch {}
+          setLoggingOut(true);
+          try {
+            if (__DEV__) console.log('[Logout] clearing auth state');
+            await logout();
+            if (__DEV__) console.log('[Logout] auth cleared — navigating to /login');
+            // dismissAll clears any open modals/sheets; replace navigates to login.
+            // The root auth guard in _layout.tsx also fires reactively (user → null),
+            // so navigation happens via whichever path resolves first — no flicker.
+            try { router.dismissAll?.(); } catch {}
             router.replace('/login');
+          } catch (error) {
+            setLoggingOut(false);
+            // Last-resort fallback: direct assign if router navigation threw.
+            if (Platform.OS === 'web' && typeof window !== 'undefined') {
+              window.location.assign('/login');
+            }
           }
         },
       },
@@ -96,13 +96,16 @@ export default function Profile() {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={tw`w-full bg-red-50 py-4 rounded-xl flex-row justify-center items-center border border-red-100`}
+          style={tw`w-full bg-red-50 py-4 rounded-xl flex-row justify-center items-center border border-red-100 ${loggingOut ? 'opacity-60' : ''}`}
           onPress={handleLogout}
+          disabled={loggingOut}
           accessibilityRole="button"
-          accessibilityLabel="Sign out"
+          accessibilityLabel={loggingOut ? 'Signing out' : 'Sign out'}
         >
-          <Ionicons name="log-out-outline" size={20} color="#dc2626" style={tw`mr-2`} />
-          <Text style={tw`text-red-600 font-bold text-base`}>Sign Out</Text>
+          {loggingOut
+            ? <ActivityIndicator size="small" color="#dc2626" style={tw`mr-2`} />
+            : <Ionicons name="log-out-outline" size={20} color="#dc2626" style={tw`mr-2`} />}
+          <Text style={tw`text-red-600 font-bold text-base`}>{loggingOut ? 'Signing out…' : 'Sign Out'}</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
