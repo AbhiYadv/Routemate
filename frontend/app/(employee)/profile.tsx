@@ -15,11 +15,25 @@ export default function Profile() {
         text: 'Sign Out',
         style: 'destructive',
         onPress: async () => {
+          if (__DEV__) console.log('[Logout] clearing auth state');
           await logout();
-          // Do NOT navigate here — calling router.replace('/') from inside the tab
-          // navigator resolves to the tab's own root, not the app root, leaving a
-          // frozen Home screen. The guard in app/_layout.tsx watches user state and
-          // navigates to the true app root when user becomes null.
+          if (__DEV__) console.log('[Logout] auth cleared — navigating to /login');
+
+          if (Platform.OS === 'web') {
+            // On web, router.replace does not fully unmount the Expo Router tab
+            // navigator — it updates the URL but keeps the React component tree
+            // alive, leaving the frozen Home tab visible and accessible via back.
+            // window.location.replace() forces a full page reload, clearing all
+            // React state and browser history entry in a single step.
+            // @ts-ignore
+            window.location.replace('/');
+          } else {
+            // On native, use the global `router` object (not the hook) so we are
+            // guaranteed to be operating at the root-level navigator, not the tab.
+            // dismissAll clears any modals/sheets; replace navigates to login.
+            try { router.dismissAll(); } catch {}
+            router.replace('/login');
+          }
         },
       },
     ]);

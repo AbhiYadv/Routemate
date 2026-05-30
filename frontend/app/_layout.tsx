@@ -1,52 +1,49 @@
-import { Slot, useRouter, useSegments } from 'expo-router';
-import { useEffect } from 'react';
+import { Redirect, Slot, useSegments } from 'expo-router';
+import { useEffect, useRef } from 'react';
 import { useAuthStore } from '../src/store/auth';
 import { View, ActivityIndicator } from 'react-native';
 import tw from 'twrnc';
 
+// Module-level flag: survives component remounts within a single page session.
+// Prevents checkAuth from firing on every expo-router layout re-mount during navigation.
+let _authInitialized = false;
+
 export default function RootLayout() {
   const { user, isLoading, checkAuth } = useAuthStore();
   const segments = useSegments();
-  const router = useRouter();
 
   useEffect(() => {
+    if (_authInitialized) return;
+    _authInitialized = true;
     checkAuth();
   }, []);
 
-  useEffect(() => {
-    if (isLoading) return;
+  const seg0 = segments[0] ?? '';
+  const inProtectedRoute = seg0 === '(employee)' || seg0 === '(admin)';
 
-    // Protected route groups — any session-required screen lives here
-    const inProtectedRoute =
-      segments[0] === '(employee)' || segments[0] === '(admin)';
-
-    if (!user) {
-      // Not authenticated: if we're inside a protected route, kick back to root.
-      // This is the ONLY place that navigates after logout — profile.tsx must NOT
-      // call router.replace('/') because it runs inside the tab navigator and
-      // resolves to the tab's own home, not the app root.
-      if (inProtectedRoute) {
-        router.replace('/');
-      }
-    } else {
-      // Authenticated: send to the correct group for the user's role
-      const inEmployeeGroup = segments[0] === '(employee)';
-      const inAdminGroup = segments[0] === '(admin)';
-
-      if (user.role === 'EMPLOYEE' || user.role === 'DRIVER') {
-        if (!inEmployeeGroup) router.replace('/(employee)');
-      } else if (user.role === 'COMPANY_ADMIN') {
-        if (!inAdminGroup) router.replace('/(admin)');
-      }
-    }
-  }, [user, isLoading, segments]);
-
-  if (isLoading) {
+  // Only block rendering with a spinner while auth is loading AND we're in a
+  // protected route — public routes (landing, login) show instantly.
+  if (isLoading && inProtectedRoute) {
     return (
       <View style={tw`flex-1 justify-center items-center bg-white`}>
         <ActivityIndicator size="large" color="#2563EB" />
       </View>
     );
+  }
+
+  // Unauthenticated in protected route → login
+  if (!isLoading && !user && inProtectedRoute) {
+    return <Redirect href="/login" />;
+  }
+
+  // Authenticated on a public page → correct group
+  if (!isLoading && user) {
+    if ((user.role === 'EMPLOYEE' || user.role === 'DRIVER') && seg0 !== '(employee)') {
+      return <Redirect href="/(employee)" />;
+    }
+    if (user.role === 'COMPANY_ADMIN' && seg0 !== '(admin)') {
+      return <Redirect href="/(admin)" />;
+    }
   }
 
   return <Slot />;

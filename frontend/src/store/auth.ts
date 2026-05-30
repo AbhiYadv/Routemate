@@ -40,7 +40,8 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   logout: async () => {
     await storage.removeItem('access_token');
-    set({ user: null, token: null });
+    // Explicitly reset isLoading so the _layout.tsx guard never returns early
+    set({ user: null, token: null, isLoading: false });
   },
 
   checkAuth: async () => {
