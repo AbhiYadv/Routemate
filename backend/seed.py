@@ -1,16 +1,15 @@
 import asyncio
 import os
 from motor.motor_asyncio import AsyncIOMotorClient
-from passlib.context import CryptContext
+import bcrypt as _bcrypt_lib
 from models import (
     Company, UserInDB, RoleEnum, OfficeLocation, Corridor, Ride, RideTypeEnum, PoolerProfile, VisibilityModeEnum
 )
 from datetime import datetime, timedelta
 import random
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-def get_password_hash(password):
-    return pwd_context.hash(password)
+def get_password_hash(password: str) -> str:
+    return _bcrypt_lib.hashpw(password.encode("utf-8"), _bcrypt_lib.gensalt(12)).decode("utf-8")
 
 async def seed():
     mongo_url = os.environ.get('MONGO_URL', "mongodb://localhost:27017")

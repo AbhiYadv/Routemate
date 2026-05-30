@@ -12,7 +12,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime, timedelta
 import jwt
-from passlib.context import CryptContext
+import bcrypt as _bcrypt_lib
 
 from models import (
     Company, UserInDB, UserPublic, UserCreate, RoleEnum, Ride, Booking, PoolerProfile,
@@ -30,7 +30,6 @@ mongo_url = os.environ.get('MONGO_URL', "mongodb://localhost:27017")
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ.get('DB_NAME', 'test_database')]
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 ALGORITHM = "HS256"
 
 # Fail fast on missing JWT secret in non-dev environments
@@ -61,11 +60,16 @@ api_router = APIRouter(prefix="/api")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return _bcrypt_lib.checkpw(
+        plain_password.encode("utf-8"),
+        hashed_password.encode("utf-8"),
+    )
 
-def get_password_hash(password):
-    return pwd_context.hash(password)
+def get_password_hash(password: str) -> str:
+    return _bcrypt_lib.hashpw(
+        password.encode("utf-8"), _bcrypt_lib.gensalt(12)
+    ).decode("utf-8")
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
