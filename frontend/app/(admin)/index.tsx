@@ -5,7 +5,7 @@ import { useAuthStore } from '../../src/store/auth';
 import { useState, useEffect } from 'react';
 import { api } from '../../src/utils/api';
 import Logo from '../../src/components/Logo';
-import { useRouter } from 'expo-router';
+import { useRouter, router } from 'expo-router';
 
 export default function AdminDashboard() {
   const { user, logout } = useAuthStore();
@@ -27,7 +27,13 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     await logout();
-    router.replace('/');
+    if (Platform.OS === 'web') {
+      // @ts-ignore
+      window.location.replace('/');
+    } else {
+      try { router.dismissAll(); } catch {}
+      router.replace('/login');
+    }
   };
 
   const handleMarkIssued = () => {
