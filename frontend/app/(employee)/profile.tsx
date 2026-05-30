@@ -8,9 +8,19 @@ export default function Profile() {
   const router = useRouter();
   const { user, logout } = useAuthStore();
 
-  const handleLogout = async () => {
-    await logout();
-    router.replace('/');
+  const handleLogout = () => {
+    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Sign Out',
+        style: 'destructive',
+        onPress: async () => {
+          await logout();
+          // Replace to root — clears history so back cannot reopen authenticated screens
+          router.replace('/');
+        },
+      },
+    ]);
   };
 
   const showComingSoon = (feature: string) => {
@@ -58,12 +68,25 @@ export default function Profile() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity 
+        {/* Publish Ride CTA */}
+        <TouchableOpacity
+          style={tw`w-full bg-[#2563EB] py-4 rounded-xl flex-row justify-center items-center mb-3 shadow-sm`}
+          onPress={() => router.push('/(employee)/create')}
+          accessibilityRole="button"
+          accessibilityLabel="Publish a ride"
+        >
+          <Ionicons name="add-circle-outline" size={20} color="white" style={tw`mr-2`} />
+          <Text style={tw`text-white font-bold text-base`}>Publish a Ride</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
           style={tw`w-full bg-red-50 py-4 rounded-xl flex-row justify-center items-center border border-red-100`}
           onPress={handleLogout}
+          accessibilityRole="button"
+          accessibilityLabel="Sign out"
         >
           <Ionicons name="log-out-outline" size={20} color="#dc2626" style={tw`mr-2`} />
-          <Text style={tw`text-red-600 font-bold text-lg`}>Logout</Text>
+          <Text style={tw`text-red-600 font-bold text-base`}>Sign Out</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
