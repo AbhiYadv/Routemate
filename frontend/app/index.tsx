@@ -15,16 +15,16 @@ const ctaShadow = Platform.select({
 });
 
 const TRUST_PILLARS = [
-  { icon: 'shield-checkmark-outline' as const, color: '#22C55E', text: 'Verified coworkers only' },
-  { icon: 'map-outline' as const, color: '#16a34a', text: 'See live routes before booking' },
-  { icon: 'people-outline' as const, color: '#9333ea', text: 'Know your co-travellers in advance' },
+  { icon: 'shield-checkmark-outline' as const, color: '#16a34a', text: 'Verified coworkers only' },
+  { icon: 'map-outline' as const, color: '#1d4ed8', text: 'See live routes before booking' },
+  { icon: 'people-outline' as const, color: '#1d4ed8', text: 'Know your co-travellers in advance' },
 ];
 
 export default function LandingPage() {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-[#f0fdf4] pt-${Platform.OS === 'android' ? '8' : '0'}`}>
+    <SafeAreaView style={tw`flex-1 bg-[#eff6ff] pt-${Platform.OS === 'android' ? '8' : '0'}`}>
       <View style={tw`flex-1 justify-between px-8 py-10`}>
 
         {/* Hero */}
@@ -37,7 +37,7 @@ export default function LandingPage() {
             RouteMate
           </Text>
 
-          <Text style={tw`text-lg font-semibold text-[#16a34a] mb-8 text-center`}>
+          <Text style={tw`text-lg font-semibold text-[#1d4ed8] mb-8 text-center`}>
             Your trusted commute network
           </Text>
 

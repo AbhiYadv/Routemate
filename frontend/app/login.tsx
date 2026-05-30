@@ -32,7 +32,7 @@ export default function Login() {
   };
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-[#F8FAFC]`}>
+    <SafeAreaView style={tw`flex-1 bg-[#eff6ff]`}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={tw`flex-1`}

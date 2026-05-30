@@ -2,7 +2,6 @@ import {
   View, Text, SafeAreaView, TouchableOpacity, ScrollView,
   Platform, TextInput, Modal, Alert,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import tw from 'twrnc';
@@ -217,20 +216,10 @@ export default function EmployeeHome() {
           </View>
         </View>
 
-        {/* ── Premium Hero — green → blue gradient ── */}
-        <LinearGradient
-          colors={['#166534', '#1d4ed8']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={tw`px-6 py-10 items-center relative overflow-hidden`}
-        >
-          {/* Glow blobs */}
-          <View style={tw`absolute -top-10 -right-10 w-48 h-48 bg-white opacity-5 rounded-full`} />
-          <View style={tw`absolute bottom-0 -left-8 w-32 h-32 bg-white opacity-5 rounded-full`} />
-
+        {/* ── Hero — solid blue ── */}
+        <View style={tw`bg-[#1d4ed8] px-6 py-10 items-center`}>
           <Animated.View style={[
-            tw`w-20 h-20 rounded-full items-center justify-center mb-5`,
-            { backgroundColor: 'rgba(255,255,255,0.15)', borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.3)' },
+            tw`w-20 h-20 bg-[#16a34a] rounded-full items-center justify-center mb-5`,
             carStyle,
           ]}>
             <Ionicons name="car-sport" size={38} color="#ffffff" />
@@ -239,10 +228,10 @@ export default function EmployeeHome() {
           <Text style={tw`text-white text-2xl font-bold mb-1 text-center tracking-tight`}>
             Find trusted rides to work.
           </Text>
-          <Text style={[tw`text-sm text-center font-medium`, { color: 'rgba(255,255,255,0.75)' }]}>
+          <Text style={[tw`text-sm text-center font-medium`, { color: 'rgba(255,255,255,0.8)' }]}>
             See who's going your way before you book.
           </Text>
-        </LinearGradient>
+        </View>
 
         {/* ── Search Card ── */}
         <View style={tw`px-4 -mt-5`}>
